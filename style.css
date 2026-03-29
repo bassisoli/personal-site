@@ -14,7 +14,6 @@ body {
 
 #menu .title {
   display: block;
-  margin-bottom: 0.5em;
 }
 
 #menu ul {
@@ -23,21 +22,9 @@ body {
   padding: 0;
 }
 
-#menu li {
-}
-
 #menu li a {
   display: inline-block;
   color: #0864c7;
-  text-decoration: none;
-}
-
-#content a {
-  text-decoration: none;
-}
-
-#content a:hover {
-  text-decoration: underline;
 }
 
 #left {
