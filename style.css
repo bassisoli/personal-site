@@ -1,6 +1,6 @@
 body {
   font-family: Helvetica;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 #menu {
@@ -32,7 +32,11 @@ body {
   text-decoration: none;
 }
 
-#menu li a:hover {
+#content a {
+  text-decoration: none;
+}
+
+#content a:hover {
   text-decoration: underline;
 }
 
