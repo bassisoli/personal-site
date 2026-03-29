@@ -1,9 +1,6 @@
 body {
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: Helvetica;
   font-size: 13px;
-  background: #fff;
-  margin: 0;
-  padding: 0;
 }
 
 #menu {
@@ -12,13 +9,21 @@ body {
   margin-right: 20px;
   text-align: right;
   width: 150px;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica;
+}
+
+#menu .title {
+  display: block;
+  margin-bottom: 0.5em;
 }
 
 #menu ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
+}
+
+#menu li {
 }
 
 #menu li a {
@@ -48,10 +53,8 @@ body {
   width: 500px;
 }
 
-#content h1,
-#content h2,
-#content h3 {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+#content h1, #content h2, #content h3 {
+  font-family: "Helvetica Neue", Helvetica;
   margin: 0;
 }
 
@@ -59,17 +62,36 @@ body {
   margin-top: 2em;
 }
 
-#content .byline,
-#content .byline a,
-#content .note {
+#content .byline, #content .byline a, #content .note {
   font-size: 10px;
   color: #aaa;
 }
 
-#content p,
-#content ul {
+#content p, #content ul {
   color: #333;
   line-height: 18px;
+}
+
+#content sup.note {
+  display: inline-block;
+  margin-top: -5px;
+}
+
+#content p.notop {
+  margin-top: 0;
+}
+
+#content .thanks {
+  margin-top: 2em;
+  padding-top: 1em;
+  border-top: 1px solid #eee;
+  margin-bottom: 4em;
+  font-size: smaller;
+  color: #777;
+}
+
+#content .thanks a {
+  color: #777;
 }
 
 #content li {
@@ -82,10 +104,6 @@ body {
 
 .post + .post {
   margin-top: 50px;
-}
-
-.post h2 {
-  margin-bottom: 0.2em;
 }
 
 .post-list {
@@ -106,20 +124,6 @@ body {
   white-space: nowrap;
   padding-top: 1px;
   min-width: 70px;
-}
-
-.project-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.project-list li {
-  margin-bottom: 1.2em;
-}
-
-.project-list .label {
-  font-weight: bold;
 }
 
 sup, sub {
