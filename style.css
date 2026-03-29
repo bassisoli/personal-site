@@ -1,0 +1,133 @@
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  background: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+#menu {
+  float: right;
+  margin-top: 30px;
+  margin-right: 20px;
+  text-align: right;
+  width: 150px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+#menu ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#menu li a {
+  display: inline-block;
+  color: #0864c7;
+  text-decoration: none;
+}
+
+#menu li a:hover {
+  text-decoration: underline;
+}
+
+#left {
+  height: 1px;
+  float: left;
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  width: 200px;
+  margin: 0;
+  padding: 0;
+}
+
+#content {
+  margin-top: 15px;
+  float: left;
+  width: 500px;
+}
+
+#content h1,
+#content h2,
+#content h3 {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0;
+}
+
+#content h2 {
+  margin-top: 2em;
+}
+
+#content .byline,
+#content .byline a,
+#content .note {
+  font-size: 10px;
+  color: #aaa;
+}
+
+#content p,
+#content ul {
+  color: #333;
+  line-height: 18px;
+}
+
+#content li {
+  margin-bottom: 0.7em;
+}
+
+#content a {
+  color: #0864c7;
+}
+
+.post + .post {
+  margin-top: 50px;
+}
+
+.post h2 {
+  margin-bottom: 0.2em;
+}
+
+.post-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.post-list li {
+  margin-bottom: 0.5em;
+  display: flex;
+  gap: 1.5em;
+}
+
+.post-list .date {
+  color: #aaa;
+  font-size: 11px;
+  white-space: nowrap;
+  padding-top: 1px;
+  min-width: 70px;
+}
+
+.project-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.project-list li {
+  margin-bottom: 1.2em;
+}
+
+.project-list .label {
+  font-weight: bold;
+}
+
+sup, sub {
+  vertical-align: baseline;
+  position: relative;
+  top: -0.4em;
+}
+
+sub {
+  top: 0.4em;
+}
