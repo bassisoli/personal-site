@@ -13,7 +13,6 @@ body {
 }
 
 #menu .title {
-  display: block;
 }
 
 #menu ul {
@@ -25,6 +24,7 @@ body {
 #menu li a {
   display: inline-block;
   color: #0864c7;
+  text-decoration: underline;
 }
 
 #left {
