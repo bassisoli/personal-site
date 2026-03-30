@@ -343,7 +343,8 @@ const IDEAS = [
 ];
 
 const API = 'https://christianhales.com/ideas-api';
-let skipped = false;
+let skipsUsed = 0;
+const MAX_SKIPS = 2;
 let currentId = null;
 
 async function getShown() {
@@ -390,15 +391,17 @@ async function generate() {
   await markShown(idea.id);
 
   document.getElementById('btn-generate').disabled = false;
-  if (!skipped) {
+  if (skipsUsed < MAX_SKIPS) {
     document.getElementById('btn-skip').disabled = false;
   }
 }
 
 async function skip() {
-  if (skipped) return;
-  skipped = true;
-  document.getElementById('btn-skip').disabled = true;
+  if (skipsUsed >= MAX_SKIPS) return;
+  skipsUsed++;
+  if (skipsUsed >= MAX_SKIPS) {
+    document.getElementById('btn-skip').disabled = true;
+  }
   await generate();
 }
 </script>
