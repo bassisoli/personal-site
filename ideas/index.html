@@ -1,0 +1,407 @@
+<html>
+<head>
+  <link rel="stylesheet" href="../style.css">
+  <meta charset="utf-8">
+  <title>Ideas · Christian Hales</title>
+  <style>
+    #idea-box { margin-top: 2em; }
+    #idea-title { font-family: "Helvetica Neue", Helvetica; font-size: 15px; font-weight: bold; margin: 0 0 0.4em 0; }
+    #idea-desc { color: #333; line-height: 18px; margin: 0 0 1.5em 0; }
+    .btn {
+      font-family: Helvetica; font-size: 13px;
+      background: none; border: 1px solid #aaa;
+      padding: 4px 12px; cursor: pointer; margin-right: 8px;
+      color: #333;
+    }
+    .btn:hover { border-color: #333; }
+    .btn:disabled { color: #ccc; border-color: #ddd; cursor: default; }
+    #status { color: #aaa; font-size: 11px; margin-top: 1em; }
+  </style>
+</head>
+<body>
+<div id="menu">
+<span class="title">Christian Hales</span>
+<ul>
+  <li><a href="/">About</a></li>
+  <li><a href="/advice">Advice</a></li>
+  <li><a href="/blog">Blog</a></li>
+  <li><a href="/bookshelf">Bookshelf</a></li>
+  <li><a href="/culture">Culture</a></li>
+  <li><a href="/enlightenment">Enlightenment</a></li>
+  <li><a href="/fast">Fast</a></li>
+  <li><a href="/growth">Growth</a></li>
+  <li><a href="/ideas">Ideas</a></li>
+  <li><a href="/labs">Labs</a></li>
+  <li><a href="/links">Links</a></li>
+  <li><a href="/novels">Novels</a></li>
+  <li><a href="/people">People</a></li>
+  <li><a href="/pollution">Pollution</a></li>
+  <li><a href="/progress">Progress</a></li>
+  <li><a href="/questions">Questions</a></li>
+  <li><a href="/solar">Solar</a></li>
+  <li><a href="/svhistory">SV history</a></li>
+  <li><a href="/travel">Travel</a></li>
+  <li><a href="/writing">Writing</a></li>
+  <li><a href="/projects">Projects</a></li>
+  <li><a href="/case-studies">Case studies</a></li>
+</ul>
+</div>
+<div id="left">&nbsp;</div>
+<div id="content">
+  <div id="idea-box">
+    <p id="idea-title"></p>
+    <p id="idea-desc"></p>
+  </div>
+  <button class="btn" id="btn-generate" onclick="generate()">Generate idea</button>
+  <button class="btn" id="btn-skip" onclick="skip()">Skip</button>
+  <p id="status"></p>
+
+<script>
+const IDEAS = [
+  {id: 0, title: `Speech Karaoke`, desc: `It's like Karaoke but you're giving speeches instead of singing songs. Imagine giving the Gettysburg Address or an MLK speech while at a bar with your friends.`},
+  {id: 1, title: `I'm Bored`, desc: `You tell this app how long you have to wait in line (DMV, Disneyworld, for your partner to finish in the bathroom, etc.) and it comes up with some challenge that will last that exact amount of time to keep you entertained.`},
+  {id: 2, title: `Rooms You Want to Escape From`, desc: `It's like a regular escape room, but instead of mystery scenarios, you are put into very awkward situations (like a long claustrophobic elevator ride with strangers).`},
+  {id: 3, title: `Duolingo, but for Accents`, desc: `It is one thing to impersonate an Australian accent. It is another thing to impersonate it well. This platform would train you in accents, so it'd be easy to speak like a Brit or Northeastern or French or Southern character.`},
+  {id: 4, title: `Eating Competition but Everyone is on Ozempic`, desc: `Takes some extra willpower to eat more if you're biologically induced to feel full.`},
+  {id: 5, title: `Under 6 Foot Basketball League`, desc: `A basketball league where everyone is under 6 foot. Gives opportunity to people who are very skilled but cannot compete with the height of the NBA.`},
+  {id: 6, title: `Pokemon Stay`, desc: `App tracks your location. Pokemon Go except the pokemon come to you. The longer you stay in one place, the more rare the pokemon become.`},
+  {id: 7, title: `Flake Button`, desc: `You have plans to hang out with a group. If you secretly don't want to go, press flake button. If a majority also pressed it, the event is canceled. If not, nobody knows you pressed it and you go stress free.`},
+  {id: 8, title: `Competitor as a Service`, desc: `We build a fake competitor landing page you can use to motivate the employees at your company.`},
+  {id: 9, title: `Anti-Organic Food Brand`, desc: `Pro-GMO grocery store. Think Liquid Death style branding but for all types of foods — blue chicken breasts, miniature watermelon, blueberries that taste like beef.`},
+  {id: 10, title: `Fortunes Inside Banana Peels`, desc: `Like fortune cookies, but put the fortunes inside of banana peels. Makes eating bananas more fun.`},
+  {id: 11, title: `Lawyers for Non-Legal Settlements`, desc: `Perhaps you are in an argument with your friend. What you want is someone like a lawyer who could provide a fair, unbiased assessment of who is in the right, even though the situation does not deal with the law.`},
+  {id: 12, title: `Natural Deli`, desc: `A lot of vegan people do not eat meat for moral reasons. Create a deli where all the food comes from animals that died of natural causes — a cow that broke its leg but the filet is still fine.`},
+  {id: 13, title: `The Great Wall of Air Fryers`, desc: `Replace your oven with a modular Wall of Air Fryers. If you already own an air fryer, this idea is obviously great. If you do not, get one, and then you will understand.`},
+  {id: 14, title: `Personality Saver`, desc: `A service that makes your child temporarily unattractive in middle school so they're forced to develop a good personality, then re-glows them up once they have one.`},
+  {id: 15, title: `Free Ideas Calendar`, desc: `Someone should make a calendar that has a free idea on each page. Perhaps that someone should be us.`},
+  {id: 16, title: `Workaholics Anonymous`, desc: `Like AA but for people who work too much.`},
+  {id: 17, title: `AI Guardian`, desc: `For those with focus issues, an AI can watch your screen and prevent you from navigating away to Twitter if you haven't finished your task for the day.`},
+  {id: 18, title: `Club Runs`, desc: `Like run clubs, except it's a group going between several different nightclubs in one night.`},
+  {id: 19, title: `Pokemon Go but for Finding Friends`, desc: `App where if you're walking near someone who has opted-in to meeting new friends with similar interests, it sends a notification connecting you two. Everyone has been background checked.`},
+  {id: 20, title: `PRESSED`, desc: `A Mac app that counts your total key presses. Kind of like Strava.`},
+  {id: 21, title: `Free Problems`, desc: `Forum where people post problems they have in their workplace or lives that a company could fix. People peruse it to get company ideas, and if someone builds around your problem, maybe you get royalties.`},
+  {id: 22, title: `Gravy Train Restaurant`, desc: `A restaurant like a sushi train but it replaces it with a river of gravy. Food comes in gravy boats, customers have a ladle to use.`},
+  {id: 23, title: `Standing Room`, desc: `Service you pay a small amount for and get free access to concerts that aren't sold out. Helps venues smooth demand, helps people go to cheap concerts, and helps artists seem like all their shows are sold out.`},
+  {id: 24, title: `Dehydrated Meal Delivery Service`, desc: `When you do long backpacking trips you can do dehydrated meals and just boil them. Why not turn this into a regular meal delivery service with much lower shipping costs?`},
+  {id: 25, title: `Art Subscription Service`, desc: `For $30/mo we will mail you a print from an up and coming artist.`},
+  {id: 26, title: `Oregon Donors`, desc: `Like organ donors except it's people in Oregon who own land and donate some of it.`},
+  {id: 27, title: `Midlife Crisis`, desc: `Enforce that everyone has a mini-retirement for a year, maybe when they're 43 or so. Social Security can pay out during this time.`},
+  {id: 28, title: `Prediction Tournaments`, desc: `In-person, competitive prediction making across a wide variety of categories. Watch professionals make predictions, then see 12 months later if they were correct. Basically competitive gambling of sorts.`},
+  {id: 29, title: `Human Blinders`, desc: `Horse blinders, but as glasses for humans. For focusing.`},
+  {id: 30, title: `Follow-Through Score`, desc: `Social credit score but for tracking how often you do what you say you're going to do.`},
+  {id: 31, title: `Partiful for Weddings`, desc: `Sometimes you want to coordinate flights and lodging to a wedding but you're not sure who's going. Basically Partiful but for weddings.`},
+  {id: 32, title: `Loading Screens for LLM Apps`, desc: `People spend lots of time waiting for LLMs to generate tokens. Would be nice to have something to do — label data, watch an ad, play Minecraft parkour, etc.`},
+  {id: 33, title: `Discount Services`, desc: `You can get cheaper dental or haircuts by going to students. We should have more of this — psychologists in training, pilots in training, etc.`},
+  {id: 34, title: `Freenets.net`, desc: `Take a picture of a basketball hoop in a park. If it doesn't have a net, we'll mail you a net.`},
+  {id: 35, title: `Text Time Machine`, desc: `Time machine that pulls up a text exchange you had 10 years ago, so you can cringe and stay humble.`},
+  {id: 36, title: `Simulated Twitter`, desc: `Pick a topic and then an LLM will simulate a Twitter feed so you learn all about that topic.`},
+  {id: 37, title: `GeoGuessr Game Generator`, desc: `Game generator that uses GeoGuessr's format as a template. Guess movies from a frame, songs from a 15 second clip, sentences from particular essays, etc.`},
+  {id: 38, title: `Single Use Gorilla Glue`, desc: `Like a tiny ketchup packet that holds just enough for one use.`},
+  {id: 39, title: `Coffee Shop but It's Bone Broth`, desc: `Make sure there are interesting bowls.`},
+  {id: 40, title: `Old Spelling Bee`, desc: `The spelling bee but not just until 8th grade. Let's see the pinnacle of good spelling. Also, host spelling bees at bars — see how people perform on basic words under the influence.`},
+  {id: 41, title: `Roast Me`, desc: `A service where you answer basic questions about yourself, upload photos, and people roast you in a really serious way.`},
+  {id: 42, title: `Dictionary with No Quit`, desc: `It looks like a typical Webster's dictionary except the word quit has been removed. Good gift for friends running a marathon.`},
+  {id: 43, title: `Slack Direct`, desc: `Slack plugin that translates messages from fluffy corporate speak to direct communication, and vice versa.`},
+  {id: 44, title: `Honey Lavender Ice Cream`, desc: `Ice cream shop that only has the best flavor: honey lavender. Full spectrum from full honey to full lavender, so there's something for everyone.`},
+  {id: 45, title: `Pure Barter Services Marketplace`, desc: `Instead of paying cash for a TaskRabbit, you'd have to offer a service in return — they hang your TV and you give them a piano lesson.`},
+  {id: 46, title: `Zoos with Robots Instead of Animals`, desc: `That's the idea.`},
+  {id: 47, title: `Better Maps`, desc: `Add semantic search over maps. E.g. find a neighborhood that is safe, close to public transportation, within 10 min walk from a gym, and has good bars and restaurants.`},
+  {id: 48, title: `Garbage In, Health Food Out`, desc: `Collect all the waste in SF and compost it and make a restaurant that serves veggies grown in that soil.`},
+  {id: 49, title: `ESPN for the Tech Industry`, desc: `Cover the hottest companies — big meetings, last minute partnership deals, key signings/firings. Eventually create the ability to trade talent.`},
+  {id: 50, title: `Doordash but for Last Minute Gifts`, desc: `They will do cakes with writing on it, balloons, bottles of wine, sports jerseys, tickets — all within 5 minutes.`},
+  {id: 51, title: `Physical Therapy + Smoothies`, desc: `Physical therapy office where you pick 4 types of frozen fruit to ice your injury, and at the end they make you a smoothie from the contents of the bag.`},
+  {id: 52, title: `Choose Your Own Adventure Book`, desc: `Audience votes on what happens next in a book, then the author continues writing it.`},
+  {id: 53, title: `GaaS (Gaslighting as a Service)`, desc: `Service that temporarily convinces you that something has happened in the world or in your life to give you more perspective and make you more grateful.`},
+  {id: 54, title: `Targeted Amnesia Pill`, desc: `So you can read a book or watch a movie for the first time again.`},
+  {id: 55, title: `Captcha but for Robots`, desc: `Only robots can pass it.`},
+  {id: 56, title: `Instagifts`, desc: `A service that connects to your partner's Instagram and collects any ads they're shown coming up to the holiday period, giving you a super easy gift buying list.`},
+  {id: 57, title: `Paying Attention Filter`, desc: `Zoom overlay that makes it look like your eyes aren't moving when you're not paying attention.`},
+  {id: 58, title: `Negotiation Database`, desc: `People can share what negotiation tactic they tried, in what kind of scenario, and how effective it was.`},
+  {id: 59, title: `Silent Discos but with Audiobooks or Podcasts`, desc: `Dance and learn.`},
+  {id: 60, title: `Uber for Quests`, desc: `Click a button, get sent a quest. Someone comes to your door, knocks three times, you open it, they say: 'Would you like to go on a quest?' Maximum 1 per year.`},
+  {id: 61, title: `Baptism Sauce`, desc: `Sure you can do your baptism with water. But what if you could mix in some of your favorite sauce — tikka masala, barbecue, ranch, etc.`},
+  {id: 62, title: `BeReal for Invisalign`, desc: `So people on Invisalign can track the progress of their friends' teeth and stay motivated to continue.`},
+  {id: 63, title: `Misled`, desc: `A book that covers academic subjects that have changed so dramatically that what you were taught in middle and high school is now incorrect.`},
+  {id: 64, title: `Marsupial Shirt`, desc: `A shirt for parents that has a kangaroo pouch. You can feed the baby through the pouch.`},
+  {id: 65, title: `Soup Dinner Party`, desc: `A dinner party where everyone brings a soup ingredient, then you enjoy it. Reduces how late people are — if you're late, you better bring an ingredient that cooks fast.`},
+  {id: 66, title: `Workout Rewards`, desc: `Barry's workout class but you earn additional smoothie ingredients based on how hard you run.`},
+  {id: 67, title: `Writing Hackathon`, desc: `A hackathon where your objective is to produce an essay or book in a short period of time.`},
+  {id: 68, title: `Foundation Model for ASMR`, desc: `A foundation model for different sounds — useful for sound effects, but also ASMR.`},
+  {id: 69, title: `Suno for Memorization`, desc: `Generates a catchy song about something you want to memorize. Easier to remember song lyrics than terms and definitions. Great for pre-med students.`},
+  {id: 70, title: `Tongue Cover`, desc: `Attachment that goes over your taste buds, so picky eaters can eat anything.`},
+  {id: 71, title: `Simple Stylist`, desc: `Upload a few photos of yourself and some basic characteristics, and get sent 10 articles of clothing you should purchase. Give feedback and it continues telling you what to buy.`},
+  {id: 72, title: `Simple Video Rules`, desc: `Describe in natural language a rule for a video stream — alert if this lever falls off the assembly line. Useful in factory, home, or public space settings.`},
+  {id: 73, title: `Competitor Listener`, desc: `Notifies you if any of your competitors have changed anything on their website — pricing, features, terms.`},
+  {id: 74, title: `World Record Recommender`, desc: `Ingests everything about you and gives you the world record you have the best shot of breaking.`},
+  {id: 75, title: `Terminal Conversations`, desc: `A marketplace where you can speak with people with terminal illnesses. Gives you a lot of perspective.`},
+  {id: 76, title: `Necklace of Silence`, desc: `A globally accepted necklace you wear when you actively do not want people to talk to you. Perfect for Uber rides, the dentist, or getting a haircut.`},
+  {id: 77, title: `Gene-Edited Racehorses`, desc: `Horse racing records haven't been broken since Secretariat in 1973. Competitions advance innovation — advance our knowledge of CRISPR while getting faster horses.`},
+  {id: 78, title: `Memory Palace Constructor`, desc: `Converts anything you want to remember into an AI-generated visual memory palace and walks you through it using the best known memory training techniques.`},
+  {id: 79, title: `Fast Super Casual`, desc: `A restaurant that just cooks up batches of Trader Joe's frozen meals in bulk and loads them into old cottage cheese containers. Grab and go. Costs $5 or less.`},
+  {id: 80, title: `Placebos for Everything`, desc: `Many studies show placebos can be effective even when you know they are placebos. A service that lets you choose what type of placebo pill you'd like and sends it via mail.`},
+  {id: 81, title: `A-cow-ntability`, desc: `A license specifically enabling people to eat beef. To get it, you have to kill a cow while staring it in the eyes.`},
+  {id: 82, title: `The Big Bang`, desc: `A movie that's just Christopher Nolan-esque footage of epic explosions. Hi-def, lots of slow-mo, amazing sound design. 2 hours long. No plot. IMAX.`},
+  {id: 83, title: `Pal`, desc: `A wearable collar for your dog that uses AI to translate its heartbeat, barks, and movements into messages you can read on your phone.`},
+  {id: 84, title: `Reverse AGI Movie`, desc: `A movie where robots invent humans and deal with all the problems humans bring — emotions, etc. — as opposed to the other way around.`},
+  {id: 85, title: `Endangered Meals`, desc: `Hire chefs to make great recipes out of endangered animals. This will drive demand and lead to innovation in breeding more of these animals.`},
+  {id: 86, title: `Reverse Flash Mob`, desc: `Large groups of people go to clubs and bars and pull out their laptops or start taking work calls at an arranged time.`},
+  {id: 87, title: `Wager`, desc: `App for friend groups where everyone anonymously bets on milestones — first kid, first marriage — and totals get paid out as the milestones happen.`},
+  {id: 88, title: `Karaoke, but Only Pop Smoke`, desc: `It's a karaoke bar, but the only music you can sing along to is from Pop Smoke.`},
+  {id: 89, title: `Fake Busy Notebook`, desc: `A notebook full of real-looking notes so you can trace them in meetings and look busy without actually participating.`},
+  {id: 90, title: `Personal Standup`, desc: `A service that calls you every morning and asks how yesterday went and what your goals are for the day. Logs the data in a dashboard with sentiment analysis.`},
+  {id: 91, title: `Rugby Basketball`, desc: `A new version of basketball where there are no fouls or goaltending. Think UFC + basketball. Everything is worth 1 point. Final scores often look like 3-1.`},
+  {id: 92, title: `Objection!`, desc: `You can hire someone to go to the weddings of people you hate and object to the marriage.`},
+  {id: 93, title: `Strava for Writing`, desc: `Mac app that tracks how many words you write a day. Easy to share with your network.`},
+  {id: 94, title: `Mental Gym`, desc: `A gym that focuses on mental fitness. A curriculum to help you get mentally tough — writing, reading, speech giving, problem solving, confronting fears.`},
+  {id: 95, title: `Medicine Ball Volleyball`, desc: `Volleyball but with a medicine ball. Objective is to throw the ball back and forth over the net and see who drops it first.`},
+  {id: 96, title: `Used`, desc: `Create a wishlist and get a notification when a certified refurbished version becomes available across reputable platforms.`},
+  {id: 97, title: `Running by Weight Class`, desc: `Marathon races but the leaderboard is organized by weight classes, like boxing.`},
+  {id: 98, title: `Internal Podcast for Organizations`, desc: `Every company should have an internal podcast that every employee listens to. Interview founders and random people from across the business. Start it early so people can listen to episodes from the beginning.`},
+  {id: 99, title: `Vintage Tech Brand Swag`, desc: `Sell clothing that companies gave to early employees — Apple t-shirts, Google sweatshirts, etc.`},
+  {id: 100, title: `Reverse Life Coaching`, desc: `Older people in a midlife crisis getting counseling from young naive adults.`},
+  {id: 101, title: `Mr. Does What He Says He's Going To Do Man`, desc: `Superhero series where the main character's power is just to do what he says he is going to do. Could be an inspiration for people at work.`},
+  {id: 102, title: `Make $1000 Class`, desc: `A class where the whole objective is to make $1000. No instruction. You pass if you make $1000 and fail if you don't. You cannot sell your time directly.`},
+  {id: 103, title: `Rodeo Drive Rodeo`, desc: `Host a big rodeo on Rodeo Drive.`},
+  {id: 104, title: `Young People Language`, desc: `Young people should create an entirely new language that old people don't understand at all. Imagine everyone under 30 speaking a totally different language.`},
+  {id: 105, title: `Mormon Life Insurance`, desc: `Mormons live longer, so they should get cheaper life insurance.`},
+  {id: 106, title: `You Can Lose Weight`, desc: `An app that texts you an unflattering picture of yourself daily motivating you to be healthy. Optionally also sends to a group of your friends.`},
+  {id: 107, title: `BS Detector`, desc: `Grammarly, but detects when your writing is using lots of buzzwords and sounds like bullshit.`},
+  {id: 108, title: `Intro Finder`, desc: `You type in a company, and it tells you your best path to get an intro to the founder by scanning your LinkedIn and Twitter connections.`},
+  {id: 109, title: `The Great Startup Survey`, desc: `Pave.com for all the other questions relevant for startup founders outside of compensation — benefits, PTO policies, etc.`},
+  {id: 110, title: `Gift Giving Consultancy`, desc: `You tell us about your target gift receiver, we curate the perfect gift.`},
+  {id: 111, title: `Flash Card Chrome Extension`, desc: `Chrome extension where you pick a topic and every time you open a new tab it has a fun fact or interesting thing to memorize. Learn skills or languages that way.`},
+  {id: 112, title: `6-Pack Living`, desc: `Guaranteed 6-pack. We live in your home and decide what you eat. If you cheat, you're kicked out and lose your $10,000 deposit.`},
+  {id: 113, title: `Dictionaries for Organizations`, desc: `Very few companies define what they mean by certain words. Even words like 'success' and 'long-term' should have organizationally-specific definitions to reduce coordination errors.`},
+  {id: 114, title: `Compliment Delivery Service`, desc: `You pay to have a person deliver an in-person compliment to a friend in another city.`},
+  {id: 115, title: `Hold the Mayo`, desc: `A restaurant that by default puts mayo on everything — your burger, your fries, your water. You have to remind them 'no mayo,' otherwise you deal with a glob on everything.`},
+  {id: 116, title: `UberBreakup`, desc: `You call an Uber to go to your ex's house and they pick up your belongings for you.`},
+  {id: 117, title: `Master Credit Card`, desc: `Enter all your credit cards onto a platform. Swipe your master card and it auto chooses whichever card gets the most points on the purchase.`},
+  {id: 118, title: `Motivation while Running`, desc: `App that broadcasts to your friends when you start a workout. They can send you audio messages that automatically play during your activity.`},
+  {id: 119, title: `Conversation Simulator`, desc: `Chatbot you interface with before having a conversation with someone. For those of us who need to practice empathy.`},
+  {id: 120, title: `Transparent Funders`, desc: `Create a database of all the limited partners involved in venture capital funds. Find out where the money is actually coming from.`},
+  {id: 121, title: `Weird-Looking Credit Cards`, desc: `Make credit cards that look like orbs or put them on keychains. All fintech cards are still rectangles.`},
+  {id: 122, title: `Lateral Olympics`, desc: `Get professional athletes to compete in sports they're not professional in. They have a month to train. LeBron running the mile. Phelps playing baseball.`},
+  {id: 123, title: `Horseback Gym`, desc: `A mechanical horse gym so people can practice horseback riding and cowboy moves without needing to own a horse.`},
+  {id: 124, title: `Course on How to Be an Adult`, desc: `A Masterclass course covering personal finances, taxes, insurance, buying a house, having kids, schools, etc.`},
+  {id: 125, title: `Hibachi for Other Foods`, desc: `Hibachi for all types of foods where they cook right in front of you. Hibachi breakfast. Tableside pancakes.`},
+  {id: 126, title: `Accountable`, desc: `Schedules a randomly generated obscene tweet that you have to wake up and disable — makes sure you are awake by a certain time.`},
+  {id: 127, title: `Live Streamed Company`, desc: `A company that live streams all of their work publicly. Every employee has a Twitch channel too.`},
+  {id: 128, title: `Backstory`, desc: `When you order meat, the restaurant gives you the backstory of whatever animal you are eating — where they lived, how long they were alive, what their life was like.`},
+  {id: 129, title: `Scenic Route`, desc: `GPS that only takes you on routes that are nice to walk, run, or bike on — not just the fastest way there.`},
+  {id: 130, title: `Ultimate Global Hackathon`, desc: `Create a hackathon with famous tech founders. Everyone has 24 hours to build something epic.`},
+  {id: 131, title: `New Food`, desc: `We need a new widely popular food. We have bread, meat, vegetables. What's next? What does the new building block look like?`},
+  {id: 132, title: `Baby Olympics`, desc: `You enroll your baby in a series of athletic competitions and the winning baby gets a college scholarship.`},
+  {id: 133, title: `Cancel-Finder`, desc: `Look at your Twitter, Instagram, and LinkedIn for old posts that would get you canceled. Sell to employers hiring candidates and for their current employees.`},
+  {id: 134, title: `Monster Run Club`, desc: `Run club where you are being chased by someone in a monster or gorilla suit the whole run.`},
+  {id: 135, title: `Sommelier Course for Water`, desc: `Not all water is created equal. Train your palate to detect different types of water.`},
+  {id: 136, title: `Knock on Wood, Wood`, desc: `Slab of wood you keep near your desk you can knock on whenever you need to knock on wood.`},
+  {id: 137, title: `See the Ingredients`, desc: `Scan the ingredients section of any food and it tells you if any of the ingredients are terrible for you — seed oils, xanthan gum, etc.`},
+  {id: 138, title: `Guidance`, desc: `Match young kids with elderly people to have weekly conversations. Older people get companionship and younger people get guidance.`},
+  {id: 139, title: `Posture-Reminder`, desc: `Wearable that buzzes you every 15 minutes reminding you to fix your posture. Could shock you if more effective.`},
+  {id: 140, title: `Table for Four`, desc: `Community that schedules four-person reservations in your city on Tuesday nights at good restaurants. A way to meet people and try good food.`},
+  {id: 141, title: `Road Trip Generator`, desc: `Put in the starting point and destination and it finds you the prettiest route, best value hotels, and best restaurants.`},
+  {id: 142, title: `Accountability Alarm Clock`, desc: `You make a pact with a friend to wake up at a certain time and both phones ring at that time and you talk to each other.`},
+  {id: 143, title: `Under 6 Foot Bar`, desc: `Bar for guys under 6 foot. The door to get in is shorter.`},
+  {id: 144, title: `Your Top Priority`, desc: `Mac app that sticks your top priority in the top right corner of your screen all the time so you are reminded of what to work on.`},
+  {id: 145, title: `Space for Your Suitcase`, desc: `When you go to stay at someone's house you don't know where to put your suitcase. There should be a solution to this.`},
+  {id: 146, title: `Pushup Beeper`, desc: `A physical device on your desk that randomly beeps and tells you to do 20 pushups. You click a button when you've done it and it logs your streak.`},
+  {id: 147, title: `Syllabus Generator`, desc: `Type in a topic and the app pulls together a collection of essays, books, activities, videos, and prompts tailored to how you learn — the absolute best way to learn anything.`},
+  {id: 148, title: `Curious People Survey`, desc: `Create a survey asking people what they like and promise to match them with one interesting person a year. Send it to 10 smart people and tell them to send it to 10 more.`},
+  {id: 149, title: `Debate Series`, desc: `Record professional debates between famous world leaders and organizations. Host live viewings. Big macro topics and niche trivial ideas.`},
+  {id: 150, title: `Videotaping the Kitchen`, desc: `Restaurant where there's an always-on feed of the people cooking your food. Watch the footage before you consume to make sure it's clean.`},
+  {id: 151, title: `Better Umbrellas`, desc: `Unclear the solution but umbrellas are just not that good. Do better, please.`},
+  {id: 152, title: `Gratitude Reminder`, desc: `Log one thing you're grateful for every day and then get random notifications of previous entries throughout your day.`},
+  {id: 153, title: `Reverse Delivery`, desc: `Restaurants that pay for your Uber to come to them, as opposed to sending you the food to your home.`},
+  {id: 154, title: `Pastabilities`, desc: `Like Chipotle, for pasta. Mainly for the name.`},
+  {id: 155, title: `Best Best Man Speeches`, desc: `Best man speeches as a service. Note: they are the best.`},
+  {id: 156, title: `Direct Advertising Network`, desc: `An advertising network where viewers and listeners of the ads actually get paid.`},
+  {id: 157, title: `Intern Program`, desc: `A program where you work 12 jobs at 12 companies, each for a month, the year after college to get a better understanding of the landscape of jobs.`},
+  {id: 158, title: `New Electrification Company`, desc: `A services business that specializes in electrifying homes for free using government subsidies, then converting them to a subscription once you're in the home.`},
+  {id: 159, title: `New Type of Gym`, desc: `Gym that you have to pay a lot more if you don't show up.`},
+  {id: 160, title: `New Easy Button`, desc: `Instead of saying 'that was easy,' have the button say 'that is bullshit.' Click it in meetings when people are just bullshitting you.`},
+  {id: 161, title: `Random Funny Trip`, desc: `You and your friends meet at the airport. Split into teams of two with $2000. Objective: go to the most random possible place within 24 hours and FaceTime each other. Most random wins.`},
+  {id: 162, title: `Alley Oop`, desc: `Dating app where people in relationships make profiles for their single friends and connect with people their actual friends with to see if they can make good setups.`},
+  {id: 163, title: `Feedback Giver`, desc: `Someone you pay to give you honest, genuine feedback. The key is complete honesty on the little things — what you're actually like to interact with.`},
+  {id: 164, title: `Once a Day Email`, desc: `Email that only shows you new messages once a day so you are not checking it all the time.`},
+  {id: 165, title: `DJ Booth Nightclub`, desc: `A nightclub with dozens of 10 to 100 person rooms that have a DJ booth in them. You and your friends rent out a room and take over the AUX.`},
+  {id: 166, title: `Pay by Weight Airline`, desc: `Airline where you are charged by how much you and your bags weigh combined.`},
+  {id: 167, title: `Cross Country`, desc: `App that connects people who want to transport their car long distances to people who want to do road trips. Ship car for free, rent car for free.`},
+  {id: 168, title: `Group Chats by Name`, desc: `We will go and find people with the same name as you and put you in a group chat.`},
+  {id: 169, title: `Successful Parenting`, desc: `A book with detailed interviews with the parents of now-successful figures throughout history.`},
+  {id: 170, title: `Birthday Cover Song`, desc: `An app for your friend group that chooses a song when it's someone's birthday, assigns everyone a part, prompts recordings, and generates the song to send the birthday person.`},
+  {id: 171, title: `Different Shot Put`, desc: `Shot put competitions where you have to throw weirdly shaped objects like a blender or a chair.`},
+  {id: 172, title: `Youth Sports Coaching League`, desc: `You and your friends all sign up to coach youth basketball or soccer. See what happens. The league lets you draft players.`},
+  {id: 173, title: `Document Editor with Transparency`, desc: `A writing platform that, when you publish an essay, also shows all the iterations that went into the piece so readers can see the writing process.`},
+  {id: 174, title: `Adult Bar Mitzvahs`, desc: `Bar mitzvahs were great fun. Just should have them as adults.`},
+  {id: 175, title: `How It Could All Change`, desc: `A blog detailing how things we accept as needed in today's society could completely change within the next 100 years, with a practical route for this change actually happening.`},
+  {id: 176, title: `Anti-Portfolios`, desc: `Founders should publish lists of all the venture capitalists that said no to them. Create a list of all the anti-portfolios.`},
+  {id: 177, title: `Shutdown Kit`, desc: `A company that makes it really easy for you to shut down your company.`},
+  {id: 178, title: `Courier`, desc: `Platform that matches you with someone traveling to a city where you want something shipped in the next 24 hours to courier your parcel at a fraction of overnight shipping cost.`},
+  {id: 179, title: `Popularizing Dance Battles`, desc: `We need a better way to settle arguments. Dance battles are the solution. There should be more public dance battles.`},
+  {id: 180, title: `Data Dating App`, desc: `Shows your bank account balance, credit score, IQ, personality test, etc.`},
+  {id: 181, title: `Fridge Lock`, desc: `Fridge locks every night at midnight unless you solve a puzzle.`},
+  {id: 182, title: `Unsexy Summer Camp`, desc: `A program where you get to work as an apprentice doing manual labor in traditionally unsexy industries like plumbing, restaurants, and oil.`},
+  {id: 183, title: `Steroid Sports League`, desc: `Run faster. Hit further. Punch harder. A sports league where any performance enhancements are allowed.`},
+  {id: 184, title: `360 Interviews for Your Life`, desc: `Service that goes and interviews 10 people around you in your life and delivers organized, anonymized feedback.`},
+  {id: 185, title: `Fantasy Venture Capital`, desc: `Like fantasy football, but for investing in startups.`},
+  {id: 186, title: `Pre-College Semester at ASU`, desc: `After high school, everyone should go to Arizona State for one semester. Just to see what it's like before going to some boring school.`},
+  {id: 187, title: `Food Fight Venues`, desc: `Like ax throwing, but for food fights. Rent out for birthdays and team-bonding events.`},
+  {id: 188, title: `Job Board with Hiring Managers`, desc: `The quality of your manager matters. Create a job board organized by who the hiring manager is and their background.`},
+  {id: 189, title: `Superlative Maker`, desc: `App that makes it easy to vote on superlatives amongst your friends.`},
+  {id: 190, title: `Yard Sale Consultant`, desc: `Help people optimize layout, pricing, and marketing for their yard sale and take a percentage of sales.`},
+  {id: 191, title: `Clean Your Closet`, desc: `Marketplace of people who are good at selling your clothes online. They take the photos and list them for a percentage of revenue.`},
+  {id: 192, title: `Documentaries as a Service`, desc: `Submit all the footage from the trip you took with your friends and we turn it into an epic documentary.`},
+  {id: 193, title: `References as a Service`, desc: `Detailed analysis on a candidate before you hire them. Goes and talks to their former manager and friends so you get a detailed view of their capabilities.`},
+  {id: 194, title: `Fast and the Furious Heist Experience`, desc: `You and your friends sign up to execute a simulated heist, just like they do in Fast and the Furious.`},
+  {id: 195, title: `Annoyingly Tall Person Prank`, desc: `Prank your friend by hiring a really tall person to follow them around and intimidate them all the time.`},
+  {id: 196, title: `Text Message Bankruptcy`, desc: `A bot where if you don't respond manually in 3 days it sends an auto-generated text back.`},
+  {id: 197, title: `Super Super Senior`, desc: `There should be 4 years of high school, 4 years of college, and then everyone goes back for a 5th year of high school after college.`},
+  {id: 198, title: `Spotify Vinyl`, desc: `At the end of every year, it sends you a vinyl with your top 20 songs of the year.`},
+  {id: 199, title: `Bring Back Rollercoaster Tycoon`, desc: `Not really a new idea, but kids these days don't play enough Rollercoaster Tycoon. And it shows.`},
+  {id: 200, title: `tHAAS`, desc: `The Hangover, the movie, as a service — you pay them and they kidnap the groom at the beginning of the bachelor party and set up an elaborate scavenger hunt to find him.`},
+  {id: 201, title: `Electric Hairbrush`, desc: `Toothbrushes went digital but hairbrushes are still analog. Would probably feel great if your hairbrush vibrated.`},
+  {id: 202, title: `Peecoat`, desc: `Like a peacoat but has a built-in system that lets you urinate while out and about and harnesses the warmth to make you warmer.`},
+  {id: 203, title: `Who Let the Dogs Out`, desc: `Free petsitting platform. Crazy that people pay to have their dog walked when there are people who would do it for free.`},
+  {id: 204, title: `ECIR`, desc: `A reverse rice maker. Put unused cooked rice in it and it dehydrates it back into the easy-to-store version.`},
+  {id: 205, title: `Shmells`, desc: `Shazam for smells.`},
+  {id: 206, title: `Wheelchair Treadmill`, desc: `Elite wheelchair racing is a thing. Where do they practice? Should have wheelchair treadmills at every gym.`},
+  {id: 207, title: `Moneython`, desc: `Like a hackathon, but the goal is simply to make as much money as possible in X amount of time, legally.`},
+  {id: 208, title: `College for Adults`, desc: `Please someone explain why you can't just run a fully functioning college for adults.`},
+  {id: 209, title: `DateMyFriends.com`, desc: `A website where you can post a gallery of profiles of your eligible friends. People apply and you can approve introductions. You can pitch your friends better than they can pitch themselves.`},
+  {id: 210, title: `Brok-in`, desc: `Service that breaks in shoes for you.`},
+  {id: 211, title: `Fish Stroller`, desc: `A purse you can carry a fish in.`},
+  {id: 212, title: `Marketing Copy LLM`, desc: `ChatGPT doesn't write good marketing copy. Fine-tune a model on high-performing marketing emails, IG captions, and TikTok scripts. Sell to ecommerce brands.`},
+  {id: 213, title: `Paparazz-me`, desc: `A service where you can pay a paparazzi to follow you around and take pictures of you. Useful for travel. Also a mode where 30 photographers greet you outside of a restaurant.`},
+  {id: 214, title: `New Jukebox`, desc: `Manager of the coffee shop sets acceptable vibes and an LLM filters out song requests that don't fit.`},
+  {id: 215, title: `Dating Gaps`, desc: `An incubator to incubate new dating apps, trying to find gaps in the market.`},
+  {id: 216, title: `Craigsagent`, desc: `An AI agent that will scrape Craigslist for apartment listings, apply, and filter out the ones trying to steal your SSN.`},
+  {id: 217, title: `Poly Market`, desc: `A market and dating app for people in open and poly relationships.`},
+  {id: 218, title: `Department More`, desc: `You arrive at a department store and select a stylist. They take you into an office with a dressing room and a TV. They interview you, bring you options, and you leave with great outfits.`},
+  {id: 219, title: `A-LOUD`, desc: `App where you can order someone to come to your location and play a song really loud on the streets.`},
+  {id: 220, title: `Mirror Mirror on the Call`, desc: `A mirror that shows you when your friends who also have that mirror are in the bathroom. You can FaceTime them while getting ready in the morning.`},
+  {id: 221, title: `YAP`, desc: `Provide high-quality, legal voice conversation data.`},
+  {id: 222, title: `Framed`, desc: `A simple website where you upload an image and get a framed print in the mail for your apartment.`},
+  {id: 223, title: `The Correlation Movie`, desc: `A satirical movie explaining how for thousands of years humans all thought correlation equaled causation, leading to most historical events we know. Then in the 1700s someone discovered it didn't.`},
+  {id: 224, title: `Playpad`, desc: `Play-Doh mousepad.`},
+  {id: 225, title: `What Happened to Pears?`, desc: `A satirical book about how pears have lost time and time again in the Pear versus Apple debate. Starting with the Garden of Eden. Steve Jobs last minute switching from Pear to Apple. What happened to pears?`},
+  {id: 226, title: `Left Forever`, desc: `A service that partners with restaurants — if you have leftovers you don't want, they call a service to come box it up and bring it to someone who is hungry.`},
+  {id: 227, title: `Loom for Audio`, desc: `Audio recording software like Loom. One of Loom's best features is commenting on particular timestamps. Audio messages should have this too.`},
+  {id: 228, title: `Dove Island`, desc: `Like Love Island but birds instead of people. Narrated by a Discovery Channel guy but also the Love Island hosts.`},
+  {id: 229, title: `Pre-Dentist Dentist`, desc: `A pre-dentist who is super chill and does a quick inspection to correct low-level issues. Then you can go to your normal dentist without anxiety.`},
+  {id: 230, title: `The Black Box`, desc: `If a plane crashes, investigators recover a black box. There should be a black box in other situations — like surgery, so you know what the surgeon was doing.`},
+  {id: 231, title: `FeedWAYback`, desc: `A writing app that lets you request a critique from famous writers. What would Hemingway say about this blog post?`},
+  {id: 232, title: `T-Rex Meat`, desc: `Like Impossible Beef but T-Rex. It's supposed to be impossible so why not have some more fun with it.`},
+  {id: 233, title: `High Agency Summer Camp`, desc: `Summer camp for kids where there are no activities planned so they have to figure it out for themselves.`},
+  {id: 234, title: `Motion for Emotions`, desc: `Bot scans attendees' prior meetings to flag potential baggage or conflicts, helping you anticipate mood and communication challenges before your current call.`},
+  {id: 235, title: `Judge-able Book Covers`, desc: `A library where all the book covers represent the books sufficiently well that you're able to judge books by their covers.`},
+  {id: 236, title: `Ozempic for Your Brain`, desc: `Clears you of BS headlines.`},
+  {id: 237, title: `Match Made in the Air`, desc: `Airlines but you can only go on if you're single and looking to date.`},
+  {id: 238, title: `Clapquest`, desc: `Map app that plays a round of applause when you arrive at your destination — like people who clap for pilots when the plane lands.`},
+  {id: 239, title: `Agree Guy`, desc: `A guy you bring with you to business meetings who just agrees with everything you say.`},
+  {id: 240, title: `Subwoofer Subway`, desc: `Subway cars all have distinct songs playing. You bluetooth connect so every subway car is its own silent disco.`},
+  {id: 241, title: `Try Hard`, desc: `A gym for triathletes. Has a pool, track, and cycling loop.`},
+  {id: 242, title: `Dance Delivery`, desc: `Doordash but for flash mobs — order one to wherever you are that arrives within 20 mins.`},
+  {id: 243, title: `Uber Party Bus`, desc: `Why not.`},
+  {id: 244, title: `Holy Foods`, desc: `Whole Foods but Kosher.`},
+  {id: 245, title: `Avocadont`, desc: `Avocados that are like shishito peppers — one in every batch is spicy.`},
+  {id: 246, title: `Divorce Insurance`, desc: `Pay a monthly subscription. The insurance covers your divorce if it happens, and gives you access to therapy and other measures to help you avoid it.`},
+  {id: 247, title: `Armstrong Airlines`, desc: `Like Southwest with no assigned seats, but boarding order is determined by your performance in a push-up contest with other passengers at the gate.`},
+  {id: 248, title: `Youth Sports Coach-ella`, desc: `There are 6.5 million youth sports coaches in the US. A music festival just for them.`},
+  {id: 249, title: `A Reverse Costco`, desc: `A place you can buy very small amounts of specialty ingredients.`},
+  {id: 250, title: `Classpass for Religions`, desc: `You belong to all religions. Pending what you need help with, you visit a church or mosque or temple.`},
+  {id: 251, title: `Meditation Minute`, desc: `Like HQ Trivia but for meditation — you get a push notification and meditate for 15 minutes with everyone else on the app.`},
+  {id: 252, title: `Dirty Pills`, desc: `With robots everything will be clean and people won't have strong immune systems. Dirty pills help you build that.`},
+  {id: 253, title: `Who Up`, desc: `Find My Friends but for if they're awake.`},
+  {id: 254, title: `Reverse Cereal`, desc: `Little balls of milk you can pour into blended cereal and water.`},
+  {id: 255, title: `Finished`, desc: `Acquire.com for books in incomplete series.`},
+  {id: 256, title: `Active River`, desc: `Like a lazy river, but for exercise. Swim upstream.`},
+  {id: 257, title: `Reverse Conveyor Belt Sushi`, desc: `People move and the sushi stays put.`},
+  {id: 258, title: `Taxpayer-Funded Matchmaking`, desc: `If you join the service and get married, you owe 1% of your paycheck in perpetuity. This funds operations for future marriages.`},
+  {id: 259, title: `See World`, desc: `Like Sea World, except there are no animals. A museum experience where you visit mini exhibitions showcasing different parts of the world.`},
+  {id: 260, title: `AI Handheld Translation Devices`, desc: `For hospitals or other businesses that would benefit from more translation.`},
+  {id: 261, title: `Costcold`, desc: `The entire grocery store is like the walk-in fridge section.`},
+  {id: 262, title: `Flash`, desc: `Every time you open your laptop, it takes a picture of you — so you get a video of how your face evolves over time.`},
+  {id: 263, title: `One Stone`, desc: `An Olympic event where you have to hit multiple objects with one stone. Two birds, one stone.`},
+  {id: 264, title: `Soviet Hold 'Em`, desc: `Like Texas Hold 'Em Poker but it doesn't matter who wins — you always split the pot evenly.`},
+  {id: 265, title: `Avogadro Toast`, desc: `Avocado toast that is exactly 6.022 inches by 6.022 inches as a nod to the great scientist.`},
+  {id: 266, title: `Flapquest`, desc: `A map app that gives you directions from A to B as the crow flies.`},
+  {id: 267, title: `Gabbaghoul`, desc: `Halloween-themed Italian restaurant.`},
+  {id: 268, title: `ShittyHuman`, desc: `An email client that forces you to get through email much slower. You miss emails. They are hard to read.`},
+  {id: 269, title: `Subprime`, desc: `Like Amazon Prime but as a fun surprise, your package comes some time in the next 5 years. You do not know when.`},
+  {id: 270, title: `Avocoaster`, desc: `A coaster for your beverages made out of avocado skin.`},
+  {id: 271, title: `Hole Foods`, desc: `Like Whole Foods, but all the food has holes in it.`},
+  {id: 272, title: `Tinderella`, desc: `Remake of Cinderella except she's Gen Z and meets Prince Charming on a dating app.`},
+  {id: 273, title: `BadReads`, desc: `Goodreads for finding books you'd likely heavily disagree with — because life is too short to only read things you already agree with.`},
+  {id: 274, title: `ReadIt`, desc: `A service you pay someone to do Reddit research for you before you purchase an item.`},
+  {id: 275, title: `Around the World in 30 Days`, desc: `A trip you sign up for that takes you around the world in 30 days, making sure you touch every continent.`},
+  {id: 276, title: `PigeIN`, desc: `Bring back pigeons for postage. Treat them humanely.`},
+  {id: 277, title: `Time Capsell`, desc: `Timecapsule as a service. Upload photos, videos, and thoughts. Locked until the date you set.`},
+  {id: 278, title: `Writing Marathon`, desc: `Train to type or write as many coherent words as possible in 4 hours.`},
+  {id: 279, title: `ReMail`, desc: `Memories for your email. Rediscover the emails you sent 5 years ago. Reminds you to reconnect with old contacts.`},
+  {id: 280, title: `BuildAnAi`, desc: `A Build-A-Bear-like experience but for building a digital AI companion. Maybe an in-person store where they walk you through tailoring your own personal AI.`},
+  {id: 281, title: `Tings`, desc: `Protein cake pops with a fortune cookie style hidden message in the wrapper.`}
+];
+
+const API = 'https://christianhales.com/ideas-api';
+let skipped = false;
+let currentId = null;
+
+async function getShown() {
+  try {
+    const r = await fetch(API);
+    return await r.json();
+  } catch (e) {
+    return [];
+  }
+}
+
+async function markShown(id) {
+  try {
+    await fetch(API, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({id})
+    });
+  } catch (e) {}
+}
+
+async function generate() {
+  document.getElementById('btn-generate').disabled = true;
+  document.getElementById('btn-skip').disabled = true;
+  document.getElementById('status').textContent = '';
+
+  const shown = await getShown();
+  const available = IDEAS.filter(i => !shown.includes(i.id) && i.id !== currentId);
+
+  if (available.length === 0) {
+    document.getElementById('idea-title').textContent = '';
+    document.getElementById('idea-desc').textContent = '';
+    document.getElementById('status').textContent = 'All ideas have been shown in the last 12 hours. Check back soon.';
+    document.getElementById('btn-generate').disabled = false;
+    return;
+  }
+
+  const idea = available[Math.floor(Math.random() * available.length)];
+  currentId = idea.id;
+
+  document.getElementById('idea-title').textContent = idea.title;
+  document.getElementById('idea-desc').textContent = idea.desc;
+
+  await markShown(idea.id);
+
+  document.getElementById('btn-generate').disabled = false;
+  if (!skipped) {
+    document.getElementById('btn-skip').disabled = false;
+  }
+}
+
+async function skip() {
+  if (skipped) return;
+  skipped = true;
+  document.getElementById('btn-skip').disabled = true;
+  await generate();
+}
+</script>
+</div>
+</body>
+</html>
