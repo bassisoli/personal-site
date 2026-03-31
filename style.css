@@ -13,6 +13,8 @@ body {
 }
 
 #menu .title {
+  color: #333;
+  text-decoration: none;
 }
 
 #menu ul {
