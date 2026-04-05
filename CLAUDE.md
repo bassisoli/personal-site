@@ -20,8 +20,11 @@ GitHub Pages + Cloudflare custom domain. After pushing to git, Cloudflare may ca
 ## Current Navigation
 - /ideas
 - /writing
+- /travel/india-2025
 
-All other pages exist as empty `index.html` files but are hidden from nav until content is ready.
+All other pages exist as empty `index.html` files — ignore them, they are placeholders with no content.
+
+**IMPORTANT:** Any change to the nav must be applied to every live page listed above, plus any subpages (e.g. `/writing/under-new-management`). They each have their own copy of the nav — there is no shared template.
 
 ---
 
@@ -40,6 +43,7 @@ Three-column float layout:
 <ul>
   <li><a href="/ideas">Ideas</a></li>
   <li><a href="/writing">Writing</a></li>
+  <li><a href="/travel/india-2025">India 2025</a></li>
 </ul>
 </div>
 ```
