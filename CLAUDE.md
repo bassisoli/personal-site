@@ -74,8 +74,13 @@ Cloudflare → Storage & Databases → KV → IDEAS_KV → KV Pairs → select a
 ---
 
 ## Deploying Changes
-1. `git add . && git commit -m "message" && git push` from `/Users/christian/personal-site/`
-2. If changes don't appear: Cloudflare → Caching → Purge Everything
+Run from `/Users/christian/personal-site/`:
+```
+./deploy.sh "commit message"
+```
+This commits, pushes, and purges the Cloudflare cache automatically.
+
+Credentials in `/Users/christian/Claude_code/.env`: `CLOUDFLARE_TOKEN`, `CLOUDFLARE_ZONE_ID`
 
 ---
 
