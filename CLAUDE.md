@@ -20,6 +20,7 @@ GitHub Pages + Cloudflare custom domain. After pushing to git, Cloudflare may ca
 ## Current Navigation
 - /ideas
 - /writing
+- /podcast (Spiegel im Spiegel)
 - /travel/india-2025
 
 All other pages exist as empty `index.html` files — ignore them, they are placeholders with no content.
@@ -43,6 +44,7 @@ Three-column float layout:
 <ul>
   <li><a href="/ideas">Ideas</a></li>
   <li><a href="/writing">Writing</a></li>
+  <li><a href="/podcast">Spiegel im Spiegel</a></li>
   <li><a href="/travel/india-2025">India 2025</a></li>
 </ul>
 </div>
