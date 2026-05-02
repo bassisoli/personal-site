@@ -2,7 +2,7 @@
 set -e
 
 # Load env
-source /Users/christian/Claude_code/.env
+source /Users/christian/Claude_code/Other/personal-site/.env
 
 # Push to git
 git add -A

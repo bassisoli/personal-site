@@ -151,7 +151,8 @@ function popupHtml(label, miles) {
   if (liveData && miles > liveData.mile) {
     const eta = liveData.timeMin + (miles - liveData.mile) * LIVE_PACE;
     return '<div class="popup-inner"><strong>' + label + '</strong><br>Mile ' + miles.toFixed(1) +
-      '<div class="window">ETA: <strong>' + fmt(eta) + '</strong> <span style="color:#27ae60;font-size:11px">● live</span></div></div>';
+      '<div class="window">ETA: <strong>' + fmt(eta) + '</strong> <span style="color:#27ae60;font-size:11px">● live</span>' +
+      '<br><span style="color:#999;font-size:11px">potential window: ' + fmt(eta - 10) + ' &ndash; ' + fmt(eta + 10) + '</span></div></div>';
   }
   const mid = timeAtMile(miles);
   const { early, late } = windowAt(miles);
