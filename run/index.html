@@ -2,6 +2,7 @@
 <head>
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Holy Ultra · Christian Hales</title>
@@ -351,8 +352,18 @@ function drop(e) { e.preventDefault(); dragLeave(); handleFiles(e.dataTransfer.f
 
 async function handleFiles(files) {
   const status = document.getElementById('upload-status');
-  for (const file of files) {
+  for (let file of files) {
     if (file.size > MAX_SIZE) { status.textContent = file.name + ' is too large (max 200MB)'; continue; }
+    // Convert HEIC to JPEG
+    const isHeic = file.type === 'image/heic' || file.type === 'image/heif' ||
+      file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
+    if (isHeic) {
+      status.textContent = 'Converting ' + file.name + ' to JPEG…';
+      try {
+        const blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.85 });
+        file = new File([blob], file.name.replace(/\.heic$/i, '.jpg').replace(/\.heif$/i, '.jpg'), { type: 'image/jpeg' });
+      } catch (e) { status.textContent = 'Could not convert ' + file.name + ' — try saving as JPEG first'; continue; }
+    }
     status.textContent = 'Uploading ' + file.name + '…';
     try {
       const presignRes = await fetch(MEDIA_PRESIGN_URL, {
