@@ -331,6 +331,15 @@ async function pollLocation() {
 pollLocation();
 setInterval(pollLocation, 30000);
 
+// Paste to upload (works from Slack, Twitter, anywhere)
+document.addEventListener('paste', function(e) {
+  const files = Array.from(e.clipboardData.items)
+    .filter(i => i.type.startsWith('image/'))
+    .map(i => i.getAsFile())
+    .filter(Boolean);
+  if (files.length) handleFiles(files);
+});
+
 // Map toggle
 function toggleMap() {
   const section = document.getElementById('map-section');
