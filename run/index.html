@@ -383,6 +383,17 @@ async function handleFiles(files) {
   setTimeout(() => { status.textContent = ''; loadGallery(); }, 1500);
 }
 
+// Admin mode — enabled at /run/admin
+const IS_ADMIN = sessionStorage.getItem('holy_admin') === '1';
+const ADMIN_TOKEN = 'f0834398c9725166dc972d33854e7a38';
+const MEDIA_DELETE_URL = 'https://christianhales.com/race-media/delete/';
+
+async function deleteItem(key, el) {
+  if (!confirm('Delete this photo/video?')) return;
+  await fetch(MEDIA_DELETE_URL + key + '?token=' + ADMIN_TOKEN, { method: 'DELETE' });
+  el.closest('.gallery-item').remove();
+}
+
 // Gallery
 function openLightbox(url, isVideo) {
   const lb = document.getElementById('lightbox');
@@ -403,6 +414,9 @@ async function loadGallery() {
     const items = await fetch(MEDIA_LIST_URL).then(r => r.json());
     if (!items.length) { gallery.innerHTML = ''; return; }
     const fileUrl = key => 'https://pub-342f73d0fab948ecba023399b91fcf41.r2.dev/' + key;
+    const deleteBtn = key => IS_ADMIN
+      ? '<button onclick="deleteItem(\'' + key + '\',this)" style="position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.6);color:white;border:none;border-radius:50%;width:24px;height:24px;font-size:14px;cursor:pointer;line-height:1;z-index:10">&times;</button>'
+      : '';
     gallery.innerHTML = '<h3>Photos &amp; Videos</h3><div class="gallery-grid">' +
       items.map(item => {
         const url = fileUrl(item.key);
@@ -410,10 +424,10 @@ async function loadGallery() {
         if (isVideo) {
           return '<div class="gallery-item" onclick="openLightbox(\'' + url + '\',true)">' +
             '<video src="' + url + '" muted playsinline preload="metadata"></video>' +
-            '<div class="play-icon"></div></div>';
+            '<div class="play-icon"></div>' + deleteBtn(item.key) + '</div>';
         }
         return '<div class="gallery-item" onclick="openLightbox(\'' + url + '\',false)">' +
-          '<img src="' + url + '" loading="lazy"></div>';
+          '<img src="' + url + '" loading="lazy">' + deleteBtn(item.key) + '</div>';
       }).join('') + '</div>';
   } catch (e) {}
 }
