@@ -391,7 +391,7 @@ async function loadGallery() {
   try {
     const items = await fetch(MEDIA_LIST_URL).then(r => r.json());
     if (!items.length) { gallery.innerHTML = ''; return; }
-    const fileUrl = key => 'https://christianhales.com/race-media/file/' + key;
+    const fileUrl = key => 'https://pub-342f73d0fab948ecba023399b91fcf41.r2.dev/' + key;
     gallery.innerHTML = '<h3>Photos &amp; Videos</h3><div class="gallery-grid">' +
       items.map(item => {
         const url = fileUrl(item.key);
