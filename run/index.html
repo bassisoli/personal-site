@@ -348,7 +348,13 @@ const MAX_SIZE = 200 * 1024 * 1024;
 
 function dragOver(e) { e.preventDefault(); document.getElementById('drop-zone').classList.add('drag-over'); }
 function dragLeave() { document.getElementById('drop-zone').classList.remove('drag-over'); }
-function drop(e) { e.preventDefault(); dragLeave(); handleFiles(e.dataTransfer.files); }
+function drop(e) {
+  e.preventDefault(); dragLeave();
+  if (e.dataTransfer.files.length > 0) { handleFiles(e.dataTransfer.files); return; }
+  // Dragged from web (e.g. Slack) — get URL and fetch server-side
+  const uri = e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text/plain');
+  if (uri && uri.match(/^https?:\/\//)) handleUrl(uri);
+}
 
 async function handleFiles(files) {
   const status = document.getElementById('upload-status');
@@ -383,6 +389,24 @@ async function handleFiles(files) {
     }
   }
   setTimeout(() => { status.textContent = ''; loadGallery(); }, 1500);
+}
+
+async function handleUrl(url) {
+  const status = document.getElementById('upload-status');
+  status.textContent = 'Fetching image…';
+  try {
+    const res = await fetch('https://christianhales.com/race-media/fetch-url', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url })
+    }).then(r => r.json());
+    if (res.error === 'storage_full') { status.textContent = 'Storage is full.'; return; }
+    if (res.error) { status.textContent = 'Could not fetch image — try saving it and uploading directly.'; return; }
+    status.textContent = 'Uploaded!';
+    setTimeout(() => { status.textContent = ''; loadGallery(); }, 1500);
+  } catch (e) {
+    status.textContent = 'Failed — try saving the image and uploading directly.';
+  }
 }
 
 // Admin mode — enabled at /run/admin
