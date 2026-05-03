@@ -350,11 +350,9 @@ function dragOver(e) { e.preventDefault(); document.getElementById('drop-zone').
 function dragLeave() { document.getElementById('drop-zone').classList.remove('drag-over'); }
 function drop(e) {
   e.preventDefault(); dragLeave();
-  const status = document.getElementById('upload-status');
   if (e.dataTransfer.files.length > 0) { handleFiles(e.dataTransfer.files); return; }
   const uri = e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text/plain');
-  const html = e.dataTransfer.getData('text/html');
-  status.textContent = 'DEBUG — files: ' + e.dataTransfer.files.length + ' | uri: ' + (uri || 'none').slice(0,80) + ' | html: ' + (html || 'none').slice(0,80);
+  if (uri && uri.match(/^https?:\/\//)) handleUrl(uri);
 }
 
 async function handleFiles(files) {
@@ -402,6 +400,7 @@ async function handleUrl(url) {
       body: JSON.stringify({ url })
     }).then(r => r.json());
     if (res.error === 'storage_full') { status.textContent = 'Storage is full.'; return; }
+    if (res.error === 'not_media') { status.textContent = 'Slack images are protected — right-click the image in Slack → Save image, then upload the file.'; return; }
     if (res.error) { status.textContent = 'Could not fetch image — try saving it and uploading directly.'; return; }
     status.textContent = 'Uploaded!';
     setTimeout(() => { status.textContent = ''; loadGallery(); }, 1500);
