@@ -350,10 +350,11 @@ function dragOver(e) { e.preventDefault(); document.getElementById('drop-zone').
 function dragLeave() { document.getElementById('drop-zone').classList.remove('drag-over'); }
 function drop(e) {
   e.preventDefault(); dragLeave();
+  const status = document.getElementById('upload-status');
   if (e.dataTransfer.files.length > 0) { handleFiles(e.dataTransfer.files); return; }
-  // Dragged from web (e.g. Slack) — get URL and fetch server-side
   const uri = e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text/plain');
-  if (uri && uri.match(/^https?:\/\//)) handleUrl(uri);
+  const html = e.dataTransfer.getData('text/html');
+  status.textContent = 'DEBUG — files: ' + e.dataTransfer.files.length + ' | uri: ' + (uri || 'none').slice(0,80) + ' | html: ' + (html || 'none').slice(0,80);
 }
 
 async function handleFiles(files) {
