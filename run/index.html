@@ -351,6 +351,12 @@ function dragLeave() { document.getElementById('drop-zone').classList.remove('dr
 function drop(e) {
   e.preventDefault(); dragLeave();
   if (e.dataTransfer.files.length > 0) { handleFiles(e.dataTransfer.files); return; }
+  // Extract img src from HTML drag data — often a CDN URL that works without auth
+  const html = e.dataTransfer.getData('text/html');
+  if (html) {
+    const match = html.match(/src="([^"]+)"/);
+    if (match && match[1].match(/^https?:\/\//)) { handleUrl(match[1]); return; }
+  }
   const uri = e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text/plain');
   if (uri && uri.match(/^https?:\/\//)) handleUrl(uri);
 }
