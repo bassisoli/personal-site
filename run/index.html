@@ -360,8 +360,10 @@ async function handleFiles(files) {
     if (isHeic) {
       status.textContent = 'Converting ' + file.name + ' to JPEG…';
       try {
-        const blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.85 });
-        file = new File([blob], file.name.replace(/\.heic$/i, '.jpg').replace(/\.heif$/i, '.jpg'), { type: 'image/jpeg' });
+        let result = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.85 });
+        if (Array.isArray(result)) result = result[0];
+        const newName = file.name.replace(/\.heic$/i, '.jpg').replace(/\.heif$/i, '.jpg');
+        file = new File([result], newName, { type: 'image/jpeg' });
       } catch (e) { status.textContent = 'Could not convert ' + file.name + ' — try saving as JPEG first'; continue; }
     }
     status.textContent = 'Uploading ' + file.name + '…';
