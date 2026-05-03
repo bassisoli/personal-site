@@ -352,13 +352,15 @@ async function handleFiles(files) {
     if (file.size > MAX_SIZE) { status.textContent = file.name + ' is too large (max 200MB)'; continue; }
     status.textContent = 'Uploading ' + file.name + '…';
     try {
-      const { uploadUrl, key } = await fetch(MEDIA_PRESIGN_URL, {
+      const presignRes = await fetch(MEDIA_PRESIGN_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ filename: file.name, type: file.type })
+        body: JSON.stringify({ filename: file.name, type: file.type, size: file.size })
       }).then(r => r.json());
 
-      await fetch(uploadUrl, { method: 'PUT', body: file, headers: { 'Content-Type': file.type } });
+      if (presignRes.error === 'storage_full') { status.textContent = 'Storage is full — no more uploads can be accepted.'; continue; }
+
+      await fetch(presignRes.uploadUrl, { method: 'PUT', body: file, headers: { 'Content-Type': file.type } });
       status.textContent = file.name + ' uploaded!';
     } catch (e) {
       status.textContent = 'Upload failed for ' + file.name;
