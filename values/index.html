@@ -89,8 +89,9 @@
 
     /* Progress bar */
     #progress-wrap { margin-bottom: 2em; }
-    #progress-track { height: 2px; background: #f0f0f0; border-radius: 2px; }
-    #progress-fill { height: 2px; background: #0864c7; border-radius: 2px; width: 0%; transition: width 0.4s ease; opacity: 0.7; }
+    .progress-segments { display: flex; gap: 4px; }
+    .progress-seg { height: 3px; background: #f0f0f0; border-radius: 2px; position: relative; overflow: hidden; }
+    .progress-seg-fill { position: absolute; left: 0; top: 0; height: 100%; background: #0864c7; opacity: 0.7; border-radius: 2px; width: 0%; transition: width 0.4s ease; }
     #progress-text { font-size: 11px; color: #ccc; margin-top: 6px; letter-spacing: 0.02em; }
   </style>
 </head>
@@ -109,7 +110,11 @@
 <div id="left">&nbsp;</div>
 <div id="content">
   <div id="progress-wrap">
-    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div class="progress-segments">
+      <div class="progress-seg" style="flex:70"><div class="progress-seg-fill" id="seg1-fill"></div></div>
+      <div class="progress-seg" style="flex:22"><div class="progress-seg-fill" id="seg2-fill"></div></div>
+      <div class="progress-seg" style="flex:8"><div class="progress-seg-fill" id="seg3-fill"></div></div>
+    </div>
     <p id="progress-text">0% complete</p>
   </div>
   <div id="values-widget"></div>
@@ -440,11 +445,14 @@ function widget() {
 }
 
 function updateProgress(pct) {
-  const fill = document.getElementById('progress-fill');
+  const s1 = document.getElementById('seg1-fill');
+  const s2 = document.getElementById('seg2-fill');
+  const s3 = document.getElementById('seg3-fill');
   const text = document.getElementById('progress-text');
-  const clamped = Math.min(100, Math.max(0, Math.round(pct)));
-  if (fill) fill.style.width = clamped + '%';
-  if (text) text.textContent = clamped + '% complete';
+  if (s1) s1.style.width = Math.min(100, Math.max(0, pct / 70 * 100)) + '%';
+  if (s2) s2.style.width = pct <= 70 ? '0%' : Math.min(100, (pct - 70) / 22 * 100) + '%';
+  if (s3) s3.style.width = pct <= 92 ? '0%' : Math.min(100, (pct - 92) / 8 * 100) + '%';
+  if (text) text.textContent = Math.round(pct) + '% complete';
 }
 
 function clusterOf(v) {
@@ -682,7 +690,7 @@ function renderPhase2() {
   const elimsNeeded = remaining - 10;
   const elimsDone = phase2StartSize - remaining;
   const totalElims = phase2StartSize - 10;
-  updateProgress(70 + (elimsDone / totalElims) * 28);
+  updateProgress(70 + (elimsDone / totalElims) * 22);
 
   widget().innerHTML = `
     <p class="hth-progress">Narrowing down &nbsp;·&nbsp; ${remaining} left</p>
