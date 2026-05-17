@@ -302,11 +302,14 @@ function rateValue(val, rating, batchPos) {
     btns[2].className = rating === 3 ? 'rate-btn rated-3 selected' : 'rate-btn';
   }
 
-  // Enable Next if all rated
+  // Enable Next if all rated, and auto-focus it
   const batch = getBatch(batchIndex);
   const allRated = batch.every(v => ratings[v] !== undefined);
   const nextBtn = document.getElementById('btn-next');
-  if (nextBtn) nextBtn.disabled = !allRated;
+  if (nextBtn) {
+    nextBtn.disabled = !allRated;
+    if (allRated) nextBtn.focus();
+  }
 
   // Always advance to next value in sequence
   if (batchPos + 1 < batch.length) {
