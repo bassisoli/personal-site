@@ -408,18 +408,10 @@ let currentPair = null; // [valA, valB]
 let phase2Pool = [];
 
 function startPhase2() {
-  // Score: rated 1 = 3pts, rated 2 = 2pts, rated 3 = 1pt
-  const scored = ALL_VALUES.map(v => ({
-    value: v,
-    score: ratings[v] || 0,
-    origIdx: ALL_VALUES.indexOf(v)
-  }));
-
-  // Sort by score desc, ties by original order
-  scored.sort((a, b) => b.score - a.score || a.origIdx - b.origIdx);
-
-  // Take top 30
-  phase2Pool = scored.slice(0, 30).map(s => s.value);
+  // Include all 3s and all 2s, cap at 50 to keep head-to-head manageable
+  const threes = ALL_VALUES.filter(v => ratings[v] === 3);
+  const twos = ALL_VALUES.filter(v => ratings[v] === 2);
+  phase2Pool = [...threes, ...twos].slice(0, 50);
   phase2StartSize = phase2Pool.length;
   matchHistory = [];
 
