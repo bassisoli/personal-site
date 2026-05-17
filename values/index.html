@@ -37,10 +37,9 @@
       min-width: 28px;
     }
     .rate-btn:hover { border-color: #888; color: #333; }
-    .rate-btn.selected { border-color: #0864c7; color: #0864c7; background: #f0f5fc; }
-    .rate-btn.rated-1.selected { border-color: #0864c7; }
-    .rate-btn.rated-2.selected { border-color: #888; color: #555; background: #f7f7f7; }
-    .rate-btn.rated-3.selected { border-color: #ccc; color: #999; background: none; }
+    .rate-btn.rated-1.selected { border-color: #9ab8e8; color: #5a8fd4; background: #deeafb; }
+    .rate-btn.rated-2.selected { border-color: #2a5fa0; color: #2a5fa0; background: #a8c4ef; }
+    .rate-btn.rated-3.selected { border-color: #0864c7; color: #fff; background: #0864c7; }
     .nav-row { margin-top: 1.5em; display: flex; align-items: center; gap: 10px; }
     .nav-hint { font-size: 11px; color: #aaa; }
 
@@ -205,7 +204,7 @@ function renderPhase1() {
   const completedSoFar = batchIndex * BATCH_SIZE;
   const totalRated = completedSoFar; // rated before this batch
   const progressText = batchIndex === 0
-    ? 'Rate each value: 1 = super important, 2 = important, 3 = not as important.'
+    ? 'Rate each value: 1 = not important, 2 = important, 3 = very important.'
     : '';
 
   let rowsHtml = '';
@@ -353,7 +352,7 @@ function startPhase2() {
   // Score: rated 1 = 3pts, rated 2 = 2pts, rated 3 = 1pt
   const scored = ALL_VALUES.map(v => ({
     value: v,
-    score: ratings[v] === 1 ? 3 : ratings[v] === 2 ? 2 : 1,
+    score: ratings[v] || 0,
     origIdx: ALL_VALUES.indexOf(v)
   }));
 
@@ -438,7 +437,7 @@ function startPhase3() {
   const scored = phase2Pool.map(v => ({
     value: v,
     wins: wins[v] || 0,
-    score: ratings[v] === 1 ? 3 : ratings[v] === 2 ? 2 : 1,
+    score: ratings[v] || 0,
     origIdx: ALL_VALUES.indexOf(v)
   }));
   scored.sort((a, b) => b.wins - a.wins || b.score - a.score || a.origIdx - b.origIdx);
