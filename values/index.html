@@ -307,12 +307,9 @@ function rateValue(val, rating, batchPos) {
   const nextBtn = document.getElementById('btn-next');
   if (nextBtn) nextBtn.disabled = !allRated;
 
-  // Advance focus to next unrated
-  const nextUnrated = batch.findIndex((v, i) => i > batchPos && ratings[v] === undefined);
-  if (nextUnrated >= 0) {
-    setFocus(nextUnrated);
-  } else {
-    setFocus(batchPos);
+  // Always advance to next value in sequence
+  if (batchPos + 1 < batch.length) {
+    setFocus(batchPos + 1);
   }
 }
 
