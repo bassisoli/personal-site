@@ -6,79 +6,80 @@
   <style>
     .btn {
       font-family: Helvetica; font-size: 13px;
-      background: none; border: 1px solid #aaa;
-      padding: 4px 12px; cursor: pointer; margin-right: 8px;
-      color: #333;
+      background: none; border: 1px solid #e3e3e3;
+      padding: 5px 14px; cursor: pointer; margin-right: 8px;
+      color: #555; border-radius: 6px;
     }
-    .btn:hover { border-color: #333; }
-    .btn:disabled { color: #ccc; border-color: #ddd; cursor: default; }
+    .btn:hover { border-color: #bbb; color: #222; }
+    .btn:disabled { color: #ccc; border-color: #eee; cursor: default; }
+    .btn:focus { outline: none; border-color: #0864c7; color: #0864c7; }
 
     #values-widget { margin-top: 1.5em; }
 
     /* Phase 1 — Rating */
-    .phase1-intro { color: #333; line-height: 18px; margin-bottom: 1.5em; }
-    .progress-label { font-size: 12px; color: #999; margin-bottom: 1.2em; }
+    .phase1-intro { color: #555; line-height: 20px; margin-bottom: 1.5em; }
+    .progress-label { font-size: 12px; color: #aaa; margin-bottom: 1.4em; letter-spacing: 0.01em; }
     .value-row {
       display: flex; align-items: center;
       max-width: 240px;
-      margin-bottom: 10px;
-      padding: 6px 0;
-      border-bottom: 1px solid #f0f0f0;
+      margin-bottom: 2px;
+      padding: 7px 0;
+      border-bottom: 1px solid #f3f3f3;
     }
     .value-row:last-of-type { border-bottom: none; }
     .value-name {
-      flex: 1; font-size: 15px; color: #333;
+      flex: 1; font-size: 14px; color: #444;
     }
-    .value-name.focused { color: #0864c7; font-weight: bold; }
-    .rate-btns { display: flex; gap: 6px; }
+    .value-name.focused { color: #0864c7; }
+    .rate-btns { display: flex; gap: 5px; }
     .rate-btn {
       font-family: Helvetica; font-size: 12px;
-      background: none; border: 1px solid #ccc;
-      padding: 2px 8px; cursor: pointer; color: #666;
-      min-width: 28px;
+      background: none; border: 1px solid #e8e8e8;
+      padding: 2px 8px; cursor: pointer; color: #999;
+      min-width: 28px; border-radius: 5px;
     }
-    .rate-btn:hover { border-color: #888; color: #333; }
-    .rate-btn.rated-1.selected { border-color: #9ab8e8; color: #5a8fd4; background: #deeafb; }
-    .rate-btn.rated-2.selected { border-color: #2a5fa0; color: #2a5fa0; background: #a8c4ef; }
+    .rate-btn:hover { border-color: #bbb; color: #555; background: #fafafa; }
+    .rate-btn.rated-1.selected { border-color: #c5d9f5; color: #5a8fd4; background: #eef4fd; }
+    .rate-btn.rated-2.selected { border-color: #6e9fd6; color: #2a5fa0; background: #c8dcf5; }
     .rate-btn.rated-3.selected { border-color: #0864c7; color: #fff; background: #0864c7; }
-    .nav-row { margin-top: 1.5em; display: flex; align-items: center; gap: 10px; }
-    .nav-hint { font-size: 11px; color: #aaa; }
+    .nav-row { margin-top: 1.8em; display: flex; align-items: center; gap: 10px; }
+    .nav-hint { font-size: 11px; color: #ccc; }
 
     /* Phase 2 — Head to head */
-    .phase2-intro { color: #333; line-height: 18px; margin-bottom: 1.5em; }
-    .hth-progress { font-size: 12px; color: #999; margin-bottom: 1.5em; }
-    .hth-prompt { font-size: 13px; color: #888; margin-bottom: 1em; }
-    .hth-buttons { display: flex; gap: 20px; margin-bottom: 1.5em; }
+    .hth-progress { font-size: 12px; color: #aaa; margin-bottom: 1.8em; letter-spacing: 0.01em; }
+    .hth-prompt { font-size: 13px; color: #aaa; margin-bottom: 1.2em; }
+    .hth-buttons { display: flex; gap: 16px; margin-bottom: 1.5em; }
     .hth-btn {
       font-family: Helvetica; font-size: 15px;
-      background: none; border: 1px solid #aaa;
-      padding: 16px 0; width: 200px; text-align: center;
-      cursor: pointer; color: #333; line-height: 1.3;
+      background: none; border: 1px solid #e3e3e3;
+      padding: 18px 0; width: 200px; text-align: center;
+      cursor: pointer; color: #444; line-height: 1.3;
+      border-radius: 8px; transition: border-color 0.15s, color 0.15s;
     }
-    .hth-btn:hover { border-color: #0864c7; color: #0864c7; }
-    .hth-hint { font-size: 11px; color: #aaa; }
+    .hth-btn:hover { border-color: #0864c7; color: #0864c7; background: #f5f8ff; }
+    .hth-hint { font-size: 11px; color: #ccc; }
 
     /* Phase 3 — Results */
-    .results-heading { font-size: 15px; font-weight: bold; margin-bottom: 1em; }
+    .results-heading { font-size: 14px; color: #aaa; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1.2em; }
     .top-values-list { list-style: none; padding: 0; margin: 0 0 2em 0; }
     .top-values-list li {
-      padding: 5px 0; border-bottom: 1px solid #f0f0f0;
+      padding: 7px 0; border-bottom: 1px solid #f3f3f3;
       font-size: 15px; color: #333;
     }
     .top-values-list li:last-child { border-bottom: none; }
-    .rank-num { color: #aaa; font-size: 13px; margin-right: 10px; }
-    .analysis-loading { color: #aaa; font-size: 13px; margin-bottom: 1.5em; }
-    .analysis-text { color: #333; line-height: 18px; font-size: 15px; }
-    .analysis-text p { margin: 0 0 1em 0; }
+    .rank-num { color: #ccc; font-size: 12px; margin-right: 12px; }
+    .analysis-loading { color: #bbb; font-size: 13px; margin-bottom: 1.5em; }
+    .analysis-text { color: #444; line-height: 22px; font-size: 15px; }
+    .analysis-text p { margin: 0 0 1.2em 0; }
     .analysis-error { color: #c00; font-size: 13px; }
     .start-over { margin-top: 2em; font-size: 13px; }
     .start-over a { color: #0864c7; }
 
     /* Progress bar */
-    #progress-wrap { margin-bottom: 1.8em; }
-    #progress-track { height: 3px; background: #eee; border-radius: 2px; }
-    #progress-fill { height: 3px; background: #0864c7; border-radius: 2px; width: 0%; transition: width 0.4s ease; }
-    #progress-text { font-size: 11px; color: #aaa; margin-top: 5px; }
+    #progress-wrap { margin-bottom: 2em; }
+    #progress-track { height: 2px; background: #f0f0f0; border-radius: 2px; }
+    #progress-fill { height: 2px; background: #0864c7; border-radius: 2px; width: 0%; transition: width 0.4s ease; opacity: 0.7; }
+    #progress-text { font-size: 11px; color: #ccc; margin-top: 6px; letter-spacing: 0.02em; }
   </style>
 </head>
 <body>
