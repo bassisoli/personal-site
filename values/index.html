@@ -349,6 +349,9 @@ document.addEventListener('keydown', function(e) {
     } else if (e.key === 'ArrowLeft') {
       e.preventDefault();
       document.getElementById('btn-back')?.focus();
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      document.getElementById('btn-next')?.focus();
     } else if (e.key === 'Enter') {
       e.preventDefault();
       const nextBtn = document.getElementById('btn-next');
