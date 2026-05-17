@@ -505,7 +505,7 @@ function renderPhase1() {
     : '';
 
   widget().innerHTML = `
-    ${batchIndex === 0 ? `<p class="phase1-intro">Most people have never stopped to ask: what actually drives me?<br><br>You'll rate 222 values, narrow them down through head-to-head comparisons, and finish with a ranked list of your top 10 — plus a short analysis of what that combination reveals about you.<br><br><span style="color:#bbb;">Takes about 15–20 minutes.</span></p><p class="phase1-intro" style="margin-top:-0.5em;"><span style="font-size:13px;color:#aaa;">Use the number, arrow, and enter keys to navigate &nbsp;·&nbsp; 1 = less &nbsp;·&nbsp; 2 = more &nbsp;·&nbsp; 3 = most</span></p>` : ''}
+    ${batchIndex === 0 ? `<p class="phase1-intro">What do you value?<br><br>You'll rate 222 values, narrow them down through head-to-head comparisons, and finish with a ranked list of your top 10 — plus a short analysis of what that combination reveals about you.<br><br><span style="color:#bbb;">Takes about 15–20 minutes.</span></p><p class="phase1-intro" style="margin-top:-0.5em;"><span style="font-size:13px;color:#aaa;">Use the number, arrow, and enter keys to navigate &nbsp;·&nbsp; 1 = less &nbsp;·&nbsp; 2 = more &nbsp;·&nbsp; 3 = most</span></p>` : ''}
     <p class="progress-label">${completedSoFar + 1}–${Math.min(completedSoFar + BATCH_SIZE, ALL_VALUES.length)} of ${ALL_VALUES.length} &nbsp;·&nbsp; Batch ${batchIndex + 1} of ${totalBatches}</p>
     ${rowsHtml}
     <div class="nav-row">
