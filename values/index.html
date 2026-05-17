@@ -491,13 +491,13 @@ function renderPhase1() {
     : '';
 
   widget().innerHTML = `
-    <p class="phase1-intro">${batchIndex === 0 ? 'What do you value most? Rate each value below.' : ''}</p>
+    ${batchIndex === 0 ? `<p class="phase1-intro">What do you value most?<br><span style="font-size:13px;color:#aaa;">Use the number, arrow, and enter keys to navigate<br>1 = less &nbsp;·&nbsp; 2 = more &nbsp;·&nbsp; 3 = most</span></p>` : ''}
     <p class="progress-label">${completedSoFar + 1}–${Math.min(completedSoFar + BATCH_SIZE, ALL_VALUES.length)} of ${ALL_VALUES.length} &nbsp;·&nbsp; Batch ${batchIndex + 1} of ${totalBatches}</p>
     ${rowsHtml}
     <div class="nav-row">
       ${backBtn}
       <button class="btn" id="btn-next" onclick="nextBatch()" ${nextDisabled}>${nextLabel}</button>
-      <span class="nav-hint">Keyboard: 1 / 2 / 3 to rate focused value, Tab to move</span>
+      <span class="nav-hint">Use the number, arrow, and enter keys to navigate</span>
     </div>
   `;
 
