@@ -337,16 +337,32 @@ document.addEventListener('keydown', function(e) {
   const phase = currentPhase();
   if (phase === 1) {
     const batch = getBatch(batchIndex);
+    const onNav = document.activeElement?.id === 'btn-next' || document.activeElement?.id === 'btn-back';
+
     if (e.key === '1' || e.key === '2' || e.key === '3') {
-      e.preventDefault();
-      const val = batch[focusedPos];
-      if (val) {
-        rateValue(val, parseInt(e.key), focusedPos);
+      if (!onNav) {
+        e.preventDefault();
+        const val = batch[focusedPos];
+        if (val) rateValue(val, parseInt(e.key), focusedPos);
       }
     } else if (e.key === 'Tab') {
       e.preventDefault();
-      const next = (focusedPos + 1) % batch.length;
-      setFocus(next);
+      setFocus((focusedPos + 1) % batch.length);
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (!onNav && focusedPos < batch.length - 1) {
+        setFocus(focusedPos + 1);
+      } else if (!onNav) {
+        document.getElementById('btn-next')?.focus();
+      }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (onNav) {
+        document.activeElement.blur();
+        setFocus(batch.length - 1);
+      } else if (focusedPos > 0) {
+        setFocus(focusedPos - 1);
+      }
     } else if (e.key === 'ArrowLeft') {
       e.preventDefault();
       document.getElementById('btn-back')?.focus();
