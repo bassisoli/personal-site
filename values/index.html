@@ -329,6 +329,15 @@ function goBack() {
   if (batchIndex > 0) {
     batchIndex--;
     renderPhase1();
+    const backBtn = document.getElementById('btn-back');
+    if (backBtn) {
+      backBtn.focus();
+      const batch = getBatch(batchIndex);
+      for (let i = 0; i < batch.length; i++) {
+        const el = document.getElementById(`vname-${i}`);
+        if (el) el.classList.remove('focused');
+      }
+    }
   }
 }
 
