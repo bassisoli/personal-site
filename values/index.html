@@ -66,7 +66,13 @@
     .hth-hint { font-size: 11px; color: #ccc; }
 
     /* Phase 3 — Results */
-    .results-heading { font-size: 14px; color: #aaa; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1.2em; }
+    .results-heading { font-size: 14px; color: #aaa; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1.2em; display: flex; align-items: center; gap: 10px; }
+    .copy-btn {
+      background: none; border: none; cursor: pointer; padding: 2px;
+      color: #ccc; line-height: 1; flex-shrink: 0;
+    }
+    .copy-btn:hover { color: #0864c7; }
+    .copy-btn svg { display: block; }
     .top-values-list { list-style: none; padding: 0; margin: 0 0 2em 0; }
     .top-values-list li {
       padding: 7px 0; border-bottom: 1px solid #f3f3f3;
@@ -210,11 +216,11 @@ const DEFINITIONS = {
   "Calm": "The steadiness that grounds you in any storm.",
   "Candor": "Speaking honestly, even when it's uncomfortable.",
   "Capable": "Trusting in your own ability to handle what comes.",
-  "Careful": "Thoughtful attention that prevents unnecessary harm.",
+  "Careful": "Thoughtful attention that protects what you and others have built.",
   "Certainty": "The confidence of knowing where you stand.",
   "Challenge": "Growing through difficulty and resistance.",
   "Charity": "Giving generously to those who need it most.",
-  "Cleanliness": "Order and care in your environment and habits.",
+  "Cleanliness": "A clear space and clean habits create room for clear thinking.",
   "Clear": "Thinking and communicating without confusion.",
   "Clever": "Finding smart solutions that others overlook.",
   "Comfort": "Creating ease and safety for yourself and others.",
@@ -267,7 +273,7 @@ const DEFINITIONS = {
   "Expressive": "Giving authentic voice to what's inside you.",
   "Fairness": "Treating people justly, without favoritism.",
   "Family": "The deep bonds of those you call your own.",
-  "Famous": "Being widely known and recognized for your work.",
+  "Famous": "Leaving a mark big enough that the world takes notice.",
   "Fearless": "Not letting fear determine your choices.",
   "Ferocious": "Pursuing what matters with intense, unstoppable force.",
   "Feelings": "Honoring the full range of your emotional life.",
@@ -306,12 +312,12 @@ const DEFINITIONS = {
   "Intelligence": "The capacity to understand, reason, and solve.",
   "Intensity": "Bringing full force and passion to what you do.",
   "Intuitive": "Trusting the wisdom that comes before the logic.",
-  "Irreverent": "Refusing to treat sacred things as beyond question.",
+  "Irreverent": "Having the nerve to question what everyone else takes for granted.",
   "Joy": "A deep gladness that goes beyond happiness.",
   "Justice": "Standing for what is right and fair in the world.",
   "Kindness": "Small acts of care that mean more than you know.",
   "Knowledge": "The understanding gained through learning and experience.",
-  "Lawful": "Respecting rules and structures that hold society together.",
+  "Lawful": "Believing that good rules, upheld consistently, make everyone freer.",
   "Leadership": "Guiding others toward a shared vision.",
   "Learning": "A lifelong love of adding to what you know.",
   "Liberty": "The freedom to live without undue restriction.",
@@ -321,7 +327,7 @@ const DEFINITIONS = {
   "Mastery": "Reaching a level of skill that feels effortless.",
   "Maturity": "The wisdom that comes from lived experience.",
   "Meaning": "Living a life that feels like it matters.",
-  "Moderation": "Finding the right amount of everything.",
+  "Moderation": "The wisdom to know when enough is exactly right.",
   "Motivation": "The spark that gets you started and keeps you going.",
   "Openness": "Welcoming new ideas, people, and experiences.",
   "Optimism": "Choosing to believe things will work out.",
@@ -375,7 +381,7 @@ const DEFINITIONS = {
   "Spirituality": "A connection to something larger than the visible world.",
   "Spontaneous": "Acting from the moment, without overthinking it.",
   "Stability": "A steady foundation that doesn't shift under pressure.",
-  "Status": "Being recognized and respected in your community.",
+  "Status": "Earning a position that reflects the work you've put in.",
   "Stewardship": "Caring for what has been entrusted to you.",
   "Strength": "The capacity to endure, lift, and persist.",
   "Structure": "Frameworks that help the right things happen consistently.",
@@ -392,7 +398,7 @@ const DEFINITIONS = {
   "Timeliness": "Respecting others' time as much as your own.",
   "Tolerance": "Extending space to those who differ from you.",
   "Toughness": "The resilience to take hits and keep going.",
-  "Traditional": "Honoring practices and values that have stood the test of time.",
+  "Traditional": "Trusting that what has endured generations carries lessons worth keeping.",
   "Tranquility": "A deep, undisturbed sense of inner quiet.",
   "Transparency": "Letting others see you clearly, without a mask.",
   "Trust": "Earning and extending confidence in relationships.",
@@ -408,7 +414,7 @@ const DEFINITIONS = {
   "Vitality": "A vibrant aliveness that shows up in everything you do.",
   "Wealth": "Creating material security and freedom for yourself.",
   "Welcoming": "Making others feel they belong wherever you are.",
-  "Winning": "The drive to come out on top.",
+  "Winning": "The belief that competing at your best is how you find your edge.",
   "Wisdom": "Knowledge applied with perspective and good judgment.",
   "Wonder": "Never losing the ability to be amazed."
 };
@@ -752,7 +758,14 @@ function startPhase3() {
   ).join('');
 
   widget().innerHTML = `
-    <p class="results-heading">Your top 10 values</p>
+    <p class="results-heading">
+      Your top 10 values
+      <button class="copy-btn" onclick="copyResults()" title="Copy list and analysis">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+      </button>
+    </p>
     <ul class="top-values-list">${listHtml}</ul>
     <p class="analysis-loading" id="analysis-status">Getting your analysis...</p>
     <div id="analysis-output"></div>
@@ -790,6 +803,25 @@ async function fetchAnalysis(top10) {
     statusEl.style.display = 'none';
     outputEl.innerHTML = `<p class="analysis-error">Couldn't load analysis. Check your connection and try again.</p>`;
   }
+}
+
+// ─── Copy results ─────────────────────────────────────────────────────────────
+
+function copyResults() {
+  const listItems = document.querySelectorAll('.top-values-list li');
+  const valueLines = Array.from(listItems).map((li, i) => `${i + 1}. ${li.textContent.trim()}`).join('\n');
+  const analysisEl = document.getElementById('analysis-output');
+  const analysisText = analysisEl ? analysisEl.innerText.trim() : '';
+  const text = `My top 10 values\n\n${valueLines}${analysisText ? '\n\n' + analysisText : ''}`;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    if (btn) {
+      btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0864c7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+      setTimeout(() => {
+        btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+      }, 2000);
+    }
+  });
 }
 
 // ─── Start over ───────────────────────────────────────────────────────────────
