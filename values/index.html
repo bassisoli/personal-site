@@ -345,6 +345,10 @@ document.addEventListener('keydown', function(e) {
       e.preventDefault();
       const next = (focusedPos + 1) % batch.length;
       setFocus(next);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const nextBtn = document.getElementById('btn-next');
+      if (nextBtn && !nextBtn.disabled) nextBtn.click();
     }
   } else if (phase === 2) {
     if (e.key === 'ArrowLeft') {
