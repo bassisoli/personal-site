@@ -354,8 +354,12 @@ document.addEventListener('keydown', function(e) {
       document.getElementById('btn-next')?.focus();
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      const nextBtn = document.getElementById('btn-next');
-      if (nextBtn && !nextBtn.disabled) nextBtn.click();
+      if (document.activeElement?.id === 'btn-back') {
+        goBack();
+      } else {
+        const nextBtn = document.getElementById('btn-next');
+        if (nextBtn && !nextBtn.disabled) nextBtn.click();
+      }
     }
   } else if (phase === 2) {
     if (e.key === 'ArrowLeft') {
