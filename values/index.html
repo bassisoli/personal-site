@@ -26,7 +26,7 @@
     }
     .value-row:last-of-type { border-bottom: none; }
     .value-name {
-      flex: 1; font-size: 15px; color: #333;
+      font-size: 15px; color: #333; margin-right: 16px;
     }
     .value-name.focused { color: #0864c7; font-weight: bold; }
     .rate-btns { display: flex; gap: 6px; }
@@ -249,7 +249,7 @@ function renderPhase1() {
   const nextDisabled = allRated ? '' : 'disabled';
 
   const backBtn = batchIndex > 0
-    ? `<button class="btn" onclick="goBack()">← Back</button>`
+    ? `<button class="btn" id="btn-back" onclick="goBack()">← Back</button>`
     : '';
 
   widget().innerHTML = `
@@ -345,6 +345,9 @@ document.addEventListener('keydown', function(e) {
       e.preventDefault();
       const next = (focusedPos + 1) % batch.length;
       setFocus(next);
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      document.getElementById('btn-back')?.focus();
     } else if (e.key === 'Enter') {
       e.preventDefault();
       const nextBtn = document.getElementById('btn-next');
