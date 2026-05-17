@@ -1,0 +1,511 @@
+<html>
+<head>
+  <link rel="stylesheet" href="../style.css">
+  <meta charset="utf-8">
+  <title>Values · Christian Hales</title>
+  <style>
+    .btn {
+      font-family: Helvetica; font-size: 13px;
+      background: none; border: 1px solid #aaa;
+      padding: 4px 12px; cursor: pointer; margin-right: 8px;
+      color: #333;
+    }
+    .btn:hover { border-color: #333; }
+    .btn:disabled { color: #ccc; border-color: #ddd; cursor: default; }
+
+    #values-widget { margin-top: 1.5em; }
+
+    /* Phase 1 — Rating */
+    .phase1-intro { color: #333; line-height: 18px; margin-bottom: 1.5em; }
+    .progress-label { font-size: 12px; color: #999; margin-bottom: 1.2em; }
+    .value-row {
+      display: flex; align-items: center;
+      margin-bottom: 10px;
+      padding: 6px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .value-row:last-of-type { border-bottom: none; }
+    .value-name {
+      flex: 1; font-size: 15px; color: #333;
+    }
+    .value-name.focused { color: #0864c7; font-weight: bold; }
+    .rate-btns { display: flex; gap: 6px; }
+    .rate-btn {
+      font-family: Helvetica; font-size: 12px;
+      background: none; border: 1px solid #ccc;
+      padding: 2px 8px; cursor: pointer; color: #666;
+      min-width: 28px;
+    }
+    .rate-btn:hover { border-color: #888; color: #333; }
+    .rate-btn.selected { border-color: #0864c7; color: #0864c7; background: #f0f5fc; }
+    .rate-btn.rated-1.selected { border-color: #0864c7; }
+    .rate-btn.rated-2.selected { border-color: #888; color: #555; background: #f7f7f7; }
+    .rate-btn.rated-3.selected { border-color: #ccc; color: #999; background: none; }
+    .nav-row { margin-top: 1.5em; display: flex; align-items: center; gap: 10px; }
+    .nav-hint { font-size: 11px; color: #aaa; }
+
+    /* Phase 2 — Head to head */
+    .phase2-intro { color: #333; line-height: 18px; margin-bottom: 1.5em; }
+    .hth-progress { font-size: 12px; color: #999; margin-bottom: 1.5em; }
+    .hth-prompt { font-size: 13px; color: #888; margin-bottom: 1em; }
+    .hth-buttons { display: flex; gap: 20px; margin-bottom: 1.5em; }
+    .hth-btn {
+      font-family: Helvetica; font-size: 15px;
+      background: none; border: 1px solid #aaa;
+      padding: 16px 0; width: 200px; text-align: center;
+      cursor: pointer; color: #333; line-height: 1.3;
+    }
+    .hth-btn:hover { border-color: #0864c7; color: #0864c7; }
+    .hth-hint { font-size: 11px; color: #aaa; }
+
+    /* Phase 3 — Results */
+    .results-heading { font-size: 15px; font-weight: bold; margin-bottom: 1em; }
+    .top-values-list { list-style: none; padding: 0; margin: 0 0 2em 0; }
+    .top-values-list li {
+      padding: 5px 0; border-bottom: 1px solid #f0f0f0;
+      font-size: 15px; color: #333;
+    }
+    .top-values-list li:last-child { border-bottom: none; }
+    .rank-num { color: #aaa; font-size: 13px; margin-right: 10px; }
+    .analysis-loading { color: #aaa; font-size: 13px; margin-bottom: 1.5em; }
+    .analysis-text { color: #333; line-height: 18px; font-size: 15px; }
+    .analysis-text p { margin: 0 0 1em 0; }
+    .analysis-error { color: #c00; font-size: 13px; }
+    .start-over { margin-top: 2em; font-size: 13px; }
+    .start-over a { color: #0864c7; }
+  </style>
+</head>
+<body>
+<div id="menu">
+<a href="/" class="title">Christian Hales</a>
+<ul>
+  <li><a href="/ideas">Ideas</a></li>
+  <li><a href="/writing">Writing</a></li>
+  <li><a href="/spiegel-im-spiegel">Spiegel im Spiegel</a></li>
+  <li><a href="/travel/india-2025">India 2025</a></li>
+  <li><a href="/run">Holy Ultra</a></li>
+</ul>
+</div>
+<div id="left">&nbsp;</div>
+<div id="content">
+  <div id="values-widget"></div>
+
+<script>
+// ─── Data ────────────────────────────────────────────────────────────────────
+
+const ALL_VALUES = [
+  "Acceptance","Accomplishment","Accountability","Accuracy","Achievement",
+  "Adaptability","Alertness","Altruism","Ambition","Amusement",
+  "Assertiveness","Attentive","Awareness","Balance","Beauty",
+  "Boldness","Bravery","Brilliance","Calm","Candor",
+  "Capable","Careful","Certainty","Challenge","Charity",
+  "Cleanliness","Clear","Clever","Comfort","Commitment",
+  "Common sense","Communication","Community","Compassion","Competence",
+  "Concentration","Confidence","Connection","Consciousness","Consistency",
+  "Contentment","Contribution","Control","Conviction","Cooperation",
+  "Courage","Courtesy","Creation","Creativity","Credibility",
+  "Curiosity","Decisive","Decisiveness","Dedication","Dependability",
+  "Determination","Development","Devotion","Dignity","Discipline",
+  "Discovery","Drive","Effectiveness","Efficiency","Empathy",
+  "Empower","Endurance","Energy","Enjoyment","Enthusiasm",
+  "Equality","Ethical","Excellence","Experience","Exploration",
+  "Expressive","Fairness","Family","Famous","Fearless",
+  "Ferocious","Feelings","Fidelity","Focus","Foresight",
+  "Fortitude","Freedom","Friendship","Fun","Generosity",
+  "Genius","Giving","Goodness","Grace","Gratitude",
+  "Greatness","Growth","Happiness","Hard work","Harmony",
+  "Health","Honesty","Honor","Hope","Humility",
+  "Imagination","Improvement","Independence","Individuality","Innovation",
+  "Inquisitive","Insightful","Inspiring","Integrity","Intelligence",
+  "Intensity","Intuitive","Irreverent","Joy","Justice",
+  "Kindness","Knowledge","Lawful","Leadership","Learning",
+  "Liberty","Logic","Love","Loyalty","Mastery",
+  "Maturity","Meaning","Moderation","Motivation","Openness",
+  "Optimism","Order","Organization","Originality","Passion",
+  "Patience","Peace","Performance","Persistence","Playfulness",
+  "Poise","Potential","Power","Present","Productivity",
+  "Professionalism","Prosperity","Purpose","Quality","Realistic",
+  "Reason","Recognition","Recreation","Reflective","Respect",
+  "Responsibility","Restraint","Results-oriented","Reverence","Rigor",
+  "Risk","Satisfaction","Security","Self-reliance","Selfless",
+  "Sensitivity","Serenity","Service","Sharing","Significance",
+  "Silence","Simplicity","Sincerity","Skill","Skillfulness",
+  "Smart","Solitude","Spirit","Spirituality","Spontaneous",
+  "Stability","Status","Stewardship","Strength","Structure",
+  "Success","Support","Surprise","Sustainability","Talent",
+  "Teamwork","Temperance","Thankful","Thorough","Thoughtful",
+  "Timeliness","Tolerance","Toughness","Traditional","Tranquility",
+  "Transparency","Trust","Trustworthy","Truth","Understanding",
+  "Uniqueness","Unity","Valor","Victory","Vigor",
+  "Vision","Vitality","Wealth","Welcoming","Winning","Wisdom","Wonder"
+];
+
+// Semantic clusters — used for smart head-to-head pairing
+const CLUSTERS = {
+  achievement: ["Achievement","Accomplishment","Success","Excellence","Mastery","Greatness","Performance","Results-oriented","Winning","Productivity","Effectiveness","Competence","Quality","Skill","Skillfulness","Professionalism"],
+  growth: ["Growth","Learning","Development","Improvement","Discovery","Knowledge","Curiosity","Inquisitive","Potential","Experience"],
+  relationships: ["Love","Compassion","Kindness","Empathy","Connection","Friendship","Family","Community","Generosity","Giving","Altruism","Selfless","Charity","Support","Service","Sharing","Welcoming"],
+  freedom: ["Freedom","Independence","Autonomy","Self-reliance","Liberty","Individuality","Uniqueness"],
+  creativity: ["Creativity","Innovation","Imagination","Originality","Genius","Talent","Expressive","Creation"],
+  integrity: ["Integrity","Honesty","Ethics","Ethical","Truth","Transparency","Trustworthy","Trust","Sincerity","Fidelity","Credibility","Candor","Honor"],
+  purpose: ["Meaning","Purpose","Vision","Significance","Contribution","Motivation","Inspiring"],
+  spirituality: ["Spirituality","Spirit","Hope","Wisdom","Wonder","Reverence","Gratitude","Thankful","Goodness","Grace"],
+  health: ["Health","Vitality","Strength","Energy","Vigor","Endurance","Fortitude"],
+  leadership: ["Leadership","Power","Influence","Control","Decisiveness","Decisive","Drive","Ambition","Determination"],
+  stability: ["Stability","Security","Order","Structure","Consistency","Certainty","Dependability","Reliability","Organization"],
+  joy: ["Happiness","Joy","Fun","Enjoyment","Playfulness","Amusement","Recreation","Enthusiasm","Spontaneous"],
+  courage: ["Courage","Bravery","Boldness","Challenge","Risk","Fearless","Ferocious","Toughness","Valor"],
+  peace: ["Balance","Harmony","Peace","Calm","Serenity","Tranquility","Simplicity","Solitude","Silence","Contentment","Moderation","Temperance"],
+  responsibility: ["Responsibility","Accountability","Dependability","Commitment","Dedication","Loyalty","Devotion","Stewardship","Discipline"],
+  mindfulness: ["Awareness","Consciousness","Reflective","Intuitive","Insightful","Present","Sensitivity","Feelings"],
+  social: ["Justice","Equality","Fairness","Tolerance","Understanding","Unity","Cooperation","Teamwork"],
+  misc: ["Smart","Clever","Logic","Reason","Intelligence","Thorough","Rigor","Careful","Accurate","Accuracy","Realistic","Attentive","Concentration","Focus","Foresight","Timeliness","Efficiency","Productivity","Communication","Common sense"]
+};
+
+// Build reverse lookup: value → cluster name
+const VALUE_CLUSTER = {};
+for (const [cluster, vals] of Object.entries(CLUSTERS)) {
+  for (const v of vals) {
+    VALUE_CLUSTER[v] = cluster;
+  }
+}
+
+const BATCH_SIZE = 5;
+const API_URL = 'https://christianhales.com/values-api';
+
+// ─── State ────────────────────────────────────────────────────────────────────
+
+let ratings = {}; // value → 1|2|3
+let batchIndex = 0;
+let totalBatches = Math.ceil(ALL_VALUES.length / BATCH_SIZE);
+
+// Phase 2
+let pool = [];        // values still in running
+let matchHistory = []; // [{a, b, winner}]
+
+// ─── Utilities ────────────────────────────────────────────────────────────────
+
+function widget() {
+  return document.getElementById('values-widget');
+}
+
+function clusterOf(v) {
+  return VALUE_CLUSTER[v] || 'misc';
+}
+
+// ─── Phase 1 ─────────────────────────────────────────────────────────────────
+
+function getBatch(idx) {
+  const start = idx * BATCH_SIZE;
+  return ALL_VALUES.slice(start, start + BATCH_SIZE);
+}
+
+function renderPhase1() {
+  const batch = getBatch(batchIndex);
+  const completedSoFar = batchIndex * BATCH_SIZE;
+  const totalRated = completedSoFar; // rated before this batch
+  const progressText = batchIndex === 0
+    ? 'Rate each value: 1 = super important, 2 = important, 3 = not as important.'
+    : '';
+
+  let rowsHtml = '';
+  batch.forEach((val, i) => {
+    const rating = ratings[val];
+    const btn1 = rating === 1 ? 'rate-btn rated-1 selected' : 'rate-btn';
+    const btn2 = rating === 2 ? 'rate-btn rated-2 selected' : 'rate-btn';
+    const btn3 = rating === 3 ? 'rate-btn rated-3 selected' : 'rate-btn';
+    rowsHtml += `
+      <div class="value-row" id="vrow-${i}" data-batch-pos="${i}" data-value="${val}">
+        <span class="value-name" id="vname-${i}">${val}</span>
+        <div class="rate-btns">
+          <button class="${btn1}" onclick="rateValue('${val}', 1, ${i})">1</button>
+          <button class="${btn2}" onclick="rateValue('${val}', 2, ${i})">2</button>
+          <button class="${btn3}" onclick="rateValue('${val}', 3, ${i})">3</button>
+        </div>
+      </div>`;
+  });
+
+  const allRated = batch.every(v => ratings[v] !== undefined);
+  const isLast = batchIndex === totalBatches - 1;
+  const nextLabel = isLast ? 'See results →' : 'Next →';
+  const nextDisabled = allRated ? '' : 'disabled';
+
+  const backBtn = batchIndex > 0
+    ? `<button class="btn" onclick="goBack()">← Back</button>`
+    : '';
+
+  widget().innerHTML = `
+    <p class="phase1-intro">${batchIndex === 0 ? 'What do you value most? Rate each value below.' : ''}</p>
+    <p class="progress-label">${completedSoFar + 1}–${Math.min(completedSoFar + BATCH_SIZE, ALL_VALUES.length)} of ${ALL_VALUES.length} &nbsp;·&nbsp; Batch ${batchIndex + 1} of ${totalBatches}</p>
+    ${rowsHtml}
+    <div class="nav-row">
+      ${backBtn}
+      <button class="btn" id="btn-next" onclick="nextBatch()" ${nextDisabled}>${nextLabel}</button>
+      <span class="nav-hint">Keyboard: 1 / 2 / 3 to rate focused value, Tab to move</span>
+    </div>
+  `;
+
+  // Focus the first unrated value, or first if all rated
+  const focusIdx = batch.findIndex(v => ratings[v] === undefined);
+  setFocus(focusIdx >= 0 ? focusIdx : 0);
+}
+
+let focusedPos = 0;
+
+function setFocus(pos) {
+  const batch = getBatch(batchIndex);
+  // Clear previous
+  for (let i = 0; i < batch.length; i++) {
+    const el = document.getElementById(`vname-${i}`);
+    if (el) el.classList.remove('focused');
+  }
+  focusedPos = pos;
+  const el = document.getElementById(`vname-${pos}`);
+  if (el) {
+    el.classList.add('focused');
+    el.scrollIntoView({ block: 'nearest' });
+  }
+}
+
+function rateValue(val, rating, batchPos) {
+  ratings[val] = rating;
+
+  // Re-render the row buttons in place
+  const row = document.getElementById(`vrow-${batchPos}`);
+  if (row) {
+    const btns = row.querySelectorAll('.rate-btn');
+    btns[0].className = rating === 1 ? 'rate-btn rated-1 selected' : 'rate-btn';
+    btns[1].className = rating === 2 ? 'rate-btn rated-2 selected' : 'rate-btn';
+    btns[2].className = rating === 3 ? 'rate-btn rated-3 selected' : 'rate-btn';
+  }
+
+  // Enable Next if all rated
+  const batch = getBatch(batchIndex);
+  const allRated = batch.every(v => ratings[v] !== undefined);
+  const nextBtn = document.getElementById('btn-next');
+  if (nextBtn) nextBtn.disabled = !allRated;
+
+  // Advance focus to next unrated
+  const nextUnrated = batch.findIndex((v, i) => i > batchPos && ratings[v] === undefined);
+  if (nextUnrated >= 0) {
+    setFocus(nextUnrated);
+  } else {
+    setFocus(batchPos);
+  }
+}
+
+function nextBatch() {
+  batchIndex++;
+  if (batchIndex >= totalBatches) {
+    startPhase2();
+  } else {
+    renderPhase1();
+  }
+}
+
+function goBack() {
+  if (batchIndex > 0) {
+    batchIndex--;
+    renderPhase1();
+  }
+}
+
+// Keyboard handler for phase 1
+document.addEventListener('keydown', function(e) {
+  const phase = currentPhase();
+  if (phase === 1) {
+    const batch = getBatch(batchIndex);
+    if (e.key === '1' || e.key === '2' || e.key === '3') {
+      e.preventDefault();
+      const val = batch[focusedPos];
+      if (val) {
+        rateValue(val, parseInt(e.key), focusedPos);
+      }
+    } else if (e.key === 'Tab') {
+      e.preventDefault();
+      const next = (focusedPos + 1) % batch.length;
+      setFocus(next);
+    }
+  } else if (phase === 2) {
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      pickWinner(0);
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      pickWinner(1);
+    }
+  }
+});
+
+function currentPhase() {
+  const w = widget();
+  if (w.querySelector('.hth-buttons')) return 2;
+  if (w.querySelector('.top-values-list')) return 3;
+  return 1;
+}
+
+// ─── Phase 2 ─────────────────────────────────────────────────────────────────
+
+let currentPair = null; // [valA, valB]
+let phase2Pool = [];
+
+function startPhase2() {
+  // Score: rated 1 = 3pts, rated 2 = 2pts, rated 3 = 1pt
+  const scored = ALL_VALUES.map(v => ({
+    value: v,
+    score: ratings[v] === 1 ? 3 : ratings[v] === 2 ? 2 : 1,
+    origIdx: ALL_VALUES.indexOf(v)
+  }));
+
+  // Sort by score desc, ties by original order
+  scored.sort((a, b) => b.score - a.score || a.origIdx - b.origIdx);
+
+  // Take top 30
+  phase2Pool = scored.slice(0, 30).map(s => s.value);
+  matchHistory = [];
+
+  renderPhase2();
+}
+
+function renderPhase2() {
+  if (phase2Pool.length <= 10) {
+    startPhase3();
+    return;
+  }
+
+  currentPair = choosePair(phase2Pool);
+
+  const remaining = phase2Pool.length;
+  const elimsNeeded = remaining - 10;
+
+  widget().innerHTML = `
+    <p class="hth-progress">Narrowing down &nbsp;·&nbsp; ${remaining} left</p>
+    <p class="hth-prompt">Which matters more to you?</p>
+    <div class="hth-buttons">
+      <button class="hth-btn" id="hth-a" onclick="pickWinner(0)">${currentPair[0]}</button>
+      <button class="hth-btn" id="hth-b" onclick="pickWinner(1)">${currentPair[1]}</button>
+    </div>
+    <p class="hth-hint">Keyboard: ← left &nbsp; → right</p>
+  `;
+}
+
+function choosePair(pool) {
+  // Prefer same-cluster pairs first
+  const clusterMap = {};
+  for (const v of pool) {
+    const c = clusterOf(v);
+    if (!clusterMap[c]) clusterMap[c] = [];
+    clusterMap[c].push(v);
+  }
+
+  // Find a cluster with 2+ members
+  const validClusters = Object.values(clusterMap).filter(g => g.length >= 2);
+  if (validClusters.length > 0) {
+    // Pick the largest cluster for richest comparison
+    validClusters.sort((a, b) => b.length - a.length);
+    const group = validClusters[0];
+    // Shuffle and take first two
+    const shuffled = group.slice().sort(() => Math.random() - 0.5);
+    return [shuffled[0], shuffled[1]];
+  }
+
+  // Fall back to cross-cluster: pick two random different-cluster values
+  const shuffled = pool.slice().sort(() => Math.random() - 0.5);
+  return [shuffled[0], shuffled[1]];
+}
+
+function pickWinner(idx) {
+  if (!currentPair) return;
+  const winner = currentPair[idx];
+  const loser = currentPair[1 - idx];
+
+  matchHistory.push({ a: currentPair[0], b: currentPair[1], winner });
+  phase2Pool = phase2Pool.filter(v => v !== loser);
+
+  renderPhase2();
+}
+
+// ─── Phase 3 ─────────────────────────────────────────────────────────────────
+
+function startPhase3() {
+  // Rank final 10 by: number of wins, then original phase1 score
+  const wins = {};
+  for (const v of phase2Pool) wins[v] = 0;
+  for (const m of matchHistory) {
+    if (wins[m.winner] !== undefined) wins[m.winner]++;
+  }
+
+  const scored = phase2Pool.map(v => ({
+    value: v,
+    wins: wins[v] || 0,
+    score: ratings[v] === 1 ? 3 : ratings[v] === 2 ? 2 : 1,
+    origIdx: ALL_VALUES.indexOf(v)
+  }));
+  scored.sort((a, b) => b.wins - a.wins || b.score - a.score || a.origIdx - b.origIdx);
+
+  const top10 = scored.map(s => s.value);
+
+  let listHtml = top10.map((v, i) =>
+    `<li><span class="rank-num">${i + 1}</span>${v}</li>`
+  ).join('');
+
+  widget().innerHTML = `
+    <p class="results-heading">Your top 10 values</p>
+    <ul class="top-values-list">${listHtml}</ul>
+    <p class="analysis-loading" id="analysis-status">Getting your analysis...</p>
+    <div id="analysis-output"></div>
+    <div class="start-over"><a href="#" onclick="startOver(); return false;">Start over</a></div>
+  `;
+
+  fetchAnalysis(top10);
+}
+
+async function fetchAnalysis(top10) {
+  const statusEl = document.getElementById('analysis-status');
+  const outputEl = document.getElementById('analysis-output');
+
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ values: top10 })
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    const text = data.analysis || '';
+
+    statusEl.style.display = 'none';
+
+    // Split into paragraphs and render
+    const paragraphs = text.split(/\n\n+/).filter(p => p.trim());
+    outputEl.innerHTML = `<div class="analysis-text">${paragraphs.map(p => `<p>${p.trim()}</p>`).join('')}</div>`;
+
+  } catch (err) {
+    statusEl.style.display = 'none';
+    outputEl.innerHTML = `<p class="analysis-error">Couldn't load analysis. Check your connection and try again.</p>`;
+  }
+}
+
+// ─── Start over ───────────────────────────────────────────────────────────────
+
+function startOver() {
+  ratings = {};
+  batchIndex = 0;
+  phase2Pool = [];
+  matchHistory = [];
+  currentPair = null;
+  focusedPos = 0;
+  renderPhase1();
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+
+renderPhase1();
+</script>
+</div>
+</body>
+</html>
